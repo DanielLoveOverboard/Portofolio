@@ -1,0 +1,8 @@
+{
+  "name": "Timeless",
+  "version": "1.0.0",
+  "agent_entry": "AGENT_RULES.md",
+  "css_entry": "timeless.css",
+  "showcase": "examples/showcase.html",
+  "scope": "universal web applications"
+}

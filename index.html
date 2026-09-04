@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MUH. FACHRI AKBAR — Creative Archive</title>
+  <meta name="description" content="Kumpulan karya dan eksplorasi visual dari berbagai hobiku: 3D, fotografi, lukisan, dan sketsa oleh Muh. Fachri Akbar.">
+  
+  <!-- Timeless UI Base & Tokens -->
+  <link rel="stylesheet" href="./Timeless-UI-v1.0/timeless.css">
+  <!-- Portfolio Custom Stylesheet -->
+  <link rel="stylesheet" href="./css/portfolio.css">
+
+  <!-- Supabase JS CDN (Fallback) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="timeless-shell">
+    
+    <!-- TOP NAVIGATION BAR (VISITOR ENTRANCE: CLEAN & MINIMAL) -->
+    <header class="timeless-nav">
+      <div class="timeless-container brand-row" style="align-items:center;padding:0;">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <strong style="letter-spacing:0.08em;font-size:14px;">MUH. FACHRI AKBAR</strong>
+          <span id="system-status" class="sys-status-badge">
+            <span class="status-dot"></span> CHECKING...
+          </span>
+        </div>
+        <div class="header-actions">
+          <button id="theme-toggle-btn" class="timeless-btn" style="min-height:38px;padding:0 14px;" aria-label="Ganti Tema">
+            <span class="timeless-mono">◐ THEME</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="timeless-container">
+      
+      <!-- HERO: MINIMALIST ARTIST STATEMENT -->
+      <section class="portfolio-header">
+        <h1 class="brand-title">Muh. Fachri Akbar</h1>
+        <p class="brand-subtitle timeless-muted">
+          Kumpulan karya dan eksplorasi visual dari berbagai hobiku: 3D, fotografi, lukisan, dan sketsa.
+        </p>
+      </section>
+
+      <!-- LIVE METRICS & STATS BAR -->
+      <section class="stats-bar" aria-label="Statistik Karya">
+        <div class="stat-item">
+          <div class="stat-num" id="stat-total">00</div>
+          <div class="stat-label">Total Works</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-3d">00</div>
+          <div class="stat-label">3D & CGI</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-photo">00</div>
+          <div class="stat-label">Photography</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-paint">00</div>
+          <div class="stat-label">Painting</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-sketch">00</div>
+          <div class="stat-label">Sketching</div>
+        </div>
+      </section>
+
+      <!-- FILTER & SEARCH TOOLBAR -->
+      <section class="filter-toolbar">
+        <!-- Category Navigation Tabs -->
+        <nav class="category-nav" id="category-nav" role="tablist" aria-label="Filter Kategori Karya">
+          <button class="cat-btn active" data-category="ALL" role="tab" aria-selected="true">
+            ALL WORKS <span class="cat-count">(0)</span>
+          </button>
+          <button class="cat-btn" data-category="3D" role="tab" aria-selected="false">
+            3D <span class="cat-count">(0)</span>
+          </button>
+          <button class="cat-btn" data-category="Photography" role="tab" aria-selected="false">
+            PHOTOGRAPHY <span class="cat-count">(0)</span>
+          </button>
+          <button class="cat-btn" data-category="Painting" role="tab" aria-selected="false">
+            PAINTING <span class="cat-count">(0)</span>
+          </button>
+          <button class="cat-btn" data-category="Sketching" role="tab" aria-selected="false">
+            SKETCHING <span class="cat-count">(0)</span>
+          </button>
+        </nav>
+
+        <!-- Search Input -->
+        <div class="search-box">
+          <div class="search-icon">⌕</div>
+          <input 
+            type="search" 
+            id="search-input" 
+            class="search-input" 
+            placeholder="Cari karya, tag (#analog), alat, tahun..." 
+            aria-label="Cari karya"
+          />
+        </div>
+      </section>
+
+      <!-- ARTWORKS GALLERY GRID -->
+      <section id="gallery-grid" class="gallery-grid" aria-live="polite">
+        <!-- Di-render oleh js/app.js -->
+      </section>
+
+    </main>
+
+    <!-- LIGHTBOX MODAL DETAIL KARYA -->
+    <div id="artwork-modal" class="timeless-modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-art-title">
+      <div class="timeless-modal-window">
+        
+        <div class="modal-header-bar">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span class="timeless-kicker" id="modal-art-cat">CATEGORY</span>
+            <span>·</span>
+            <span id="modal-art-pos">01 / 01</span>
+          </div>
+          <button id="modal-close-btn" class="timeless-btn" style="min-height:32px;padding:0 10px;font-size:12px;" aria-label="Tutup Detail">
+            ✕ [ESC] CLOSE
+          </button>
+        </div>
+
+        <div class="modal-content-split">
+          <!-- Image Pane -->
+          <div class="modal-media-pane">
+            <img id="modal-art-img" src="" alt="" />
+          </div>
+
+          <!-- Metadata & Description Pane -->
+          <div class="modal-detail-pane">
+            <div>
+              <h2 id="modal-art-title" class="modal-title">Judul Karya</h2>
+            </div>
+
+            <div class="modal-data-row">
+              <span class="modal-data-label">Year</span>
+              <span id="modal-art-year" class="timeless-mono">—</span>
+            </div>
+
+            <div class="modal-data-row">
+              <span class="modal-data-label">Medium</span>
+              <span id="modal-art-medium">—</span>
+            </div>
+
+            <div class="modal-data-row">
+              <span class="modal-data-label">Tags</span>
+              <div id="modal-art-tags" class="modal-tags-list"></div>
+            </div>
+
+            <div style="margin-top:8px;">
+              <span class="modal-data-label" style="display:block;margin-bottom:6px;">Description</span>
+              <p id="modal-art-desc" class="modal-desc"></p>
+            </div>
+
+            <div style="margin-top:12px;">
+              <a id="modal-art-link" href="#" target="_blank" rel="noopener noreferrer" class="timeless-btn" style="font-size:12px;width:100%;text-decoration:none;">
+                OPEN ORIGINAL IMAGE ↗
+              </a>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="modal-nav-row">
+              <button id="modal-prev-btn" class="timeless-btn" style="min-height:40px;flex:1;">
+                ← PREVIOUS
+              </button>
+              <button id="modal-next-btn" class="timeless-btn timeless-btn-primary" style="min-height:40px;flex:1;">
+                NEXT →
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EDITORIAL FOOTER (DENGAN RESTRICTED ADMIN ACCESS) -->
+    <footer class="portfolio-footer">
+      <div class="timeless-container footer-content">
+        <div>
+          <strong>MUH. FACHRI AKBAR</strong>
+          <div class="timeless-muted" style="margin-top:4px;font-size:12px;">
+            Personal Creative Archive · Timeless UI v1.0
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:12px;">
+          <a href="mailto:fachri@example.com">EMAIL</a>
+          <a href="https://instagram.com" target="_blank" rel="noopener">INSTAGRAM</a>
+          <a href="https://github.com" target="_blank" rel="noopener">GITHUB</a>
+          <!-- Discreet Admin Entrance -->
+          <a href="./admin.html" class="timeless-mono" title="Owner Access (Shortcut: Alt + A)" style="opacity:0.35;text-decoration:none;">[ · ]</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Main JavaScript Controller -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+@import url("./tokens/colors.css");
+@import url("./tokens/typography.css");
+@import url("./tokens/spacing.css");
+@import url("./tokens/radius.css");
+@import url("./tokens/motion.css");
+*{box-sizing:border-box}html{background:var(--timeless-bg)}
+body{margin:0;background:var(--timeless-bg);color:var(--timeless-fg);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-underline-offset:3px}:focus-visible{outline:2px solid var(--timeless-focus);outline-offset:3px}
+.timeless-shell{min-height:100vh;background:var(--timeless-bg);color:var(--timeless-fg)}
+.timeless-container{width:min(1200px,calc(100% - 32px));margin:auto}
+.timeless-border{border:1px solid var(--timeless-border)}.timeless-border-strong{border:2px solid var(--timeless-border)}
+.timeless-muted{opacity:.72}.timeless-mono{font-family:var(--timeless-font-mono)}
+.timeless-kicker{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.timeless-btn{min-height:44px;border:1px solid var(--timeless-border);border-radius:2px;padding:0 16px;
+display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;background:var(--timeless-bg);
+color:var(--timeless-fg);transition:transform 120ms var(--timeless-ease),background 120ms var(--timeless-ease),color 120ms var(--timeless-ease)}
+.timeless-btn:hover{text-decoration:underline}.timeless-btn:active{transform:translateY(1px)}
+.timeless-btn-primary{background:var(--timeless-inverse-bg);color:var(--timeless-inverse-fg)}
+.timeless-btn-primary:hover{background:var(--timeless-bg);color:var(--timeless-fg)}
+.timeless-btn-ghost{border-color:transparent;text-decoration:underline}
+.timeless-icon-btn{width:44px;min-width:44px;height:44px;padding:0}
+.timeless-field{display:grid;gap:6px}.timeless-label{font-weight:700;font-size:14px}
+.timeless-input,.timeless-select,.timeless-textarea{width:100%;min-height:44px;border:1px solid var(--timeless-border);
+border-radius:2px;background:var(--timeless-bg);color:var(--timeless-fg);padding:10px 12px}
+.timeless-textarea{min-height:120px;resize:vertical}
+.timeless-input:focus,.timeless-select:focus,.timeless-textarea:focus{outline:2px solid var(--timeless-focus);outline-offset:1px}
+.timeless-card{border:1px solid var(--timeless-border);background:var(--timeless-bg);padding:20px}
+.timeless-card-inverse{background:var(--timeless-inverse-bg);color:var(--timeless-inverse-fg)}
+.timeless-stat{display:grid;gap:4px;padding:16px 0;border-top:2px solid var(--timeless-border)}
+.timeless-stat-value{font-size:40px;line-height:1.1;font-weight:600}
+.timeless-tabs{display:flex;overflow:auto;border-bottom:1px solid var(--timeless-border)}
+.timeless-tab{min-height:44px;padding:10px 14px;border:0;border-bottom:2px solid transparent;background:transparent;color:inherit;cursor:pointer;white-space:nowrap}
+.timeless-tab[aria-selected="true"]{border-bottom-color:var(--timeless-border);font-weight:700}
+.timeless-table-wrap{overflow:auto}.timeless-table{width:100%;border-collapse:collapse;text-align:left}
+.timeless-table th,.timeless-table td{padding:12px;border-bottom:1px solid var(--timeless-border);vertical-align:top}
+.timeless-table th{border-bottom-width:2px;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.timeless-badge{display:inline-flex;align-items:center;min-height:28px;padding:3px 8px;border:1px solid var(--timeless-border);
+border-radius:2px;font-size:12px;font-weight:700}
+.timeless-nav{min-height:57px;border-bottom:1px solid var(--timeless-border);display:flex;align-items:center;gap:24px}
+.timeless-command{display:flex;min-height:44px;border:1px solid var(--timeless-border)}
+.timeless-command>*{border:0;border-right:1px solid var(--timeless-border)}.timeless-command>*:last-child{border-right:0}
+.timeless-skeleton{height:16px;background:var(--timeless-inverse-bg);animation:timeless-pulse 1.1s steps(2,jump-none) infinite}
+@keyframes timeless-pulse{50%{opacity:0}}
+@media(max-width:700px){
+.timeless-container{width:calc(100% - 24px)}
+.timeless-nav{gap:14px;overflow:auto;padding:0 12px}
+.timeless-grid-2,.timeless-grid-3{grid-template-columns:1fr!important}
+.timeless-stack-mobile{flex-direction:column!important;align-items:stretch!important}
+.timeless-btn{min-height:48px}.timeless-stat-value{font-size:32px}
+}

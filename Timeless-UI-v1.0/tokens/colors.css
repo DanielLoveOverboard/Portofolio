@@ -1,0 +1,12 @@
+:root,[data-theme="light"]{
+--timeless-black:#000000;--timeless-white:#FFFFFF;
+--timeless-bg:#FFFFFF;--timeless-fg:#000000;
+--timeless-inverse-bg:#000000;--timeless-inverse-fg:#FFFFFF;
+--timeless-border:#000000;--timeless-focus:#000000;
+}
+[data-theme="dark"]{
+--timeless-black:#000000;--timeless-white:#FFFFFF;
+--timeless-bg:#000000;--timeless-fg:#FFFFFF;
+--timeless-inverse-bg:#FFFFFF;--timeless-inverse-fg:#000000;
+--timeless-border:#FFFFFF;--timeless-focus:#FFFFFF;
+}

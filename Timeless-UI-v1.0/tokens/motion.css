@@ -1,0 +1,8 @@
+:root{
+--timeless-duration-fast:120ms;--timeless-duration-normal:180ms;
+--timeless-duration-panel:240ms;--timeless-ease:cubic-bezier(.2,.7,.2,1);
+}
+@media(prefers-reduced-motion:reduce){
+*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;
+transition-duration:1ms!important;scroll-behavior:auto!important}
+}

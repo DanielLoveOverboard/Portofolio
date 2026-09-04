@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PORTAL PEMILIK — Timeless Portfolio Admin</title>
+  
+  <!-- Timeless UI Base & Tokens -->
+  <link rel="stylesheet" href="./Timeless-UI-v1.0/timeless.css">
+  <!-- Portfolio Custom Stylesheet -->
+  <link rel="stylesheet" href="./css/portfolio.css">
+
+  <!-- Supabase JS CDN (Optional fallback for ESM) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="timeless-shell">
+
+    <!-- ADMIN TOP NAVIGATION -->
+    <header class="timeless-nav">
+      <div class="timeless-container brand-row" style="align-items:center;padding:0;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <strong style="letter-spacing:0.08em;font-size:14px;">ADMIN // CONTROL PANEL</strong>
+          <span id="admin-status-badge" class="sys-status-badge">
+            <span class="status-dot"></span> INITIALIZING...
+          </span>
+        </div>
+        <div class="header-actions">
+          <button id="admin-theme-btn" class="timeless-btn" style="min-height:36px;padding:0 12px;">
+            <span class="timeless-mono">◐ THEME</span>
+          </button>
+          <a href="./index.html" class="timeless-btn" style="min-height:36px;padding:0 12px;text-decoration:none;">
+            <span>← VIEW PORTOFOLIO</span>
+          </a>
+          <button id="admin-logout-btn" class="timeless-btn timeless-btn-primary" style="min-height:36px;padding:0 12px;display:none;">
+            LOGOUT [→]
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="timeless-container" style="padding-top:32px;padding-bottom:64px;">
+
+      <!-- NOTIFIKASI KREDENSIAL BELUM DIISI (JIKA BELUM SET DI CONFIG.JS) -->
+      <div id="unconfigured-warning" class="timeless-card" style="display:none;margin-bottom:24px;border:2px solid currentColor;">
+        <div class="timeless-kicker" style="margin-bottom:4px;">PERHATIAN // SUPABASE BELUM TERHUBUNG</div>
+        <p style="margin:0 0 12px 0;line-height:1.5;">
+          Anda belum memasukkan <strong>Project URL</strong> dan <strong>Anon Key</strong> Supabase di dalam file <code>js/config.js</code>.
+          Silakan ikuti panduan lengkap di <a href="./PANDUAN_SUPABASE_DAN_DEPLOY.md" target="_blank"><strong>PANDUAN_SUPABASE_DAN_DEPLOY.md</strong></a> untuk mengaktifkan database dan storage cloud gratis Anda.
+        </p>
+        <span class="timeless-badge">STATUS: OFFLINE MOCK MODE</span>
+      </div>
+
+      <!-- FEEDBACK MESSAGE / TOAST -->
+      <div id="admin-feedback" class="timeless-card" style="display:none;margin-bottom:24px;border-width:2px;font-weight:700;">
+        <span id="feedback-text">STATUS</span>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 1: FORM LOGIN ADMIN (MUNCUL JIKA BELUM TEROTENTIKASI) -->
+      <!-- ===================================================================== -->
+      <section id="login-view" style="display:none;max-width:460px;margin:40px auto;">
+        <div class="timeless-card timeless-border-strong">
+          <div class="timeless-kicker" style="margin-bottom:8px;">RESTRICTED ENTRANCE // OWNER ONLY</div>
+          <h2 style="margin:0 0 8px 0;font-size:24px;">Muh. Fachri Akbar — Admin</h2>
+          <p class="timeless-muted" style="margin:0 0 24px 0;font-size:13px;line-height:1.5;">
+            Pintu masuk khusus pemilik portofolio untuk mengunggah dan mengelola karya hobi (3D, fotografi, lukisan, sketsa).
+          </p>
+
+          <form id="login-form">
+            <div class="timeless-field" style="margin-bottom:16px;">
+              <label for="login-email" class="timeless-label">Email Pemilik</label>
+              <input 
+                type="email" 
+                id="login-email" 
+                class="timeless-input" 
+                placeholder="nama@email.com" 
+                required 
+                autocomplete="username"
+              />
+            </div>
+
+            <div class="timeless-field" style="margin-bottom:24px;">
+              <label for="login-password" class="timeless-label">Password</label>
+              <input 
+                type="password" 
+                id="login-password" 
+                class="timeless-input" 
+                placeholder="••••••••••••" 
+                required 
+                autocomplete="current-password"
+              />
+            </div>
+
+            <button type="submit" id="login-submit-btn" class="timeless-btn timeless-btn-primary" style="width:100%;">
+              MASUK KE DASHBOARD →
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 2: DASHBOARD MANAJEMEN KARYA (MUNCUL JIKA SUDAH LOGIN) -->
+      <!-- ===================================================================== -->
+      <section id="dashboard-view" style="display:none;">
+        
+        <!-- Section Header -->
+        <div style="margin-bottom:32px;border-bottom:1px solid var(--timeless-border);padding-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div class="timeless-kicker">Panel Manajemen Karya</div>
+            <h1 style="font-size:32px;margin:4px 0 0;letter-spacing:-0.03em;">Upload & Kelola Portofolio</h1>
+          </div>
+          <div class="timeless-mono" style="font-size:12px;">
+            Terotentikasi sebagai: <strong id="user-email-display">user@email.com</strong>
+          </div>
+        </div>
+
+        <!-- GRID: FORM UPLOAD & DAFTAR KARYA -->
+        <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:32px;align-items:start;" id="admin-main-grid">
+          
+          <!-- FORM TAMBAH KARYA BARU -->
+          <div class="timeless-card timeless-border-strong">
+            <div class="timeless-kicker" style="margin-bottom:8px;">FORM INPUT KARYA</div>
+            <h2 style="margin:0 0 16px 0;font-size:20px;">Upload Karya Baru</h2>
+
+            <form id="upload-form">
+              
+              <!-- DROPZONE UNTUK GAMBAR -->
+              <div class="timeless-field" style="margin-bottom:16px;">
+                <label class="timeless-label">Gambar Karya (Maks. 20MB)</label>
+                <div id="dropzone" class="dropzone" role="button" tabindex="0">
+                  <div id="dropzone-prompt">
+                    <strong>KLIK ATAU SERET GAMBAR KE SINI</strong>
+                    <div class="timeless-muted" style="font-size:12px;margin-top:4px;">
+                      Mendukung: JPG, PNG, WebP, GIF, SVG
+                    </div>
+                  </div>
+                  <img id="image-preview" class="dropzone-preview" style="display:none;" alt="Pratinjau Gambar" />
+                </div>
+                <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" style="display:none;" />
+              </div>
+
+              <!-- JUDUL KARYA -->
+              <div class="timeless-field" style="margin-bottom:16px;">
+                <label for="art-title" class="timeless-label">Judul Karya *</label>
+                <input type="text" id="art-title" class="timeless-input" placeholder="Contoh: Brutalist Monolith 04" required />
+              </div>
+
+              <!-- KATEGORI & TAHUN -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+                <div class="timeless-field">
+                  <label for="art-category" class="timeless-label">Kategori *</label>
+                  <select id="art-category" class="timeless-select" required>
+                    <option value="3D">3D</option>
+                    <option value="Photography">Photography</option>
+                    <option value="Painting">Painting</option>
+                    <option value="Sketching">Sketching</option>
+                  </select>
+                </div>
+
+                <div class="timeless-field">
+                  <label for="art-year" class="timeless-label">Tahun Pembuatan</label>
+                  <input type="text" id="art-year" class="timeless-input" placeholder="2026" maxlength="10" />
+                </div>
+              </div>
+
+              <!-- MEDIUM / SOFTWARE / PERALATAN -->
+              <div class="timeless-field" style="margin-bottom:16px;">
+                <label for="art-medium" class="timeless-label">Media / Alat / Software</label>
+                <input 
+                  type="text" 
+                  id="art-medium" 
+                  class="timeless-input" 
+                  placeholder="Contoh: Blender 4.2, Leica M6 35mm, Charcoal on Kraft..." 
+                />
+              </div>
+
+              <!-- TAGS UNTUK PENCARIAN -->
+              <div class="timeless-field" style="margin-bottom:16px;">
+                <label for="art-tags" class="timeless-label">Tags (Pisahkan koma, muncul saat pengunjung mencari)</label>
+                <input 
+                  type="text" 
+                  id="art-tags" 
+                  class="timeless-input" 
+                  placeholder="Contoh: cyberpunk, neon, analog, street, 35mm, portrait" 
+                />
+              </div>
+
+              <!-- DESKRIPSI -->
+              <div class="timeless-field" style="margin-bottom:24px;">
+                <label for="art-desc" class="timeless-label">Deskripsi / Konsep Karya</label>
+                <textarea 
+                  id="art-desc" 
+                  class="timeless-textarea" 
+                  rows="4" 
+                  placeholder="Jelaskan konsep, ide visual, atau catatan teknis karya..."
+                ></textarea>
+              </div>
+
+              <button type="submit" id="upload-submit-btn" class="timeless-btn timeless-btn-primary" style="width:100%;">
+                PUBLISH KARYA KE PORTOFOLIO →
+              </button>
+            </form>
+          </div>
+
+          <!-- TABEL DAFTAR KARYA YANG SUDAH DIUPLOAD -->
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+              <div>
+                <div class="timeless-kicker">Database Arsip</div>
+                <h2 style="margin:0;font-size:20px;">Daftar Karya Aktif (<span id="admin-works-count">0</span>)</h2>
+              </div>
+              <button id="refresh-list-btn" class="timeless-btn" style="min-height:36px;font-size:12px;">
+                REFRESH ↻
+              </button>
+            </div>
+
+            <div class="timeless-table-wrap timeless-border">
+              <table class="timeless-table">
+                <thead>
+                  <tr>
+                    <th style="width:60px;">Visual</th>
+                    <th>Judul & Kategori</th>
+                    <th>Medium & Tahun</th>
+                    <th style="width:90px;text-align:right;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="artworks-table-body">
+                  <tr>
+                    <td colspan="4" style="text-align:center;padding:32px;" class="timeless-muted">
+                      Memuat data karya...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Admin Controller -->
+  <script type="module" src="./js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Timeless UI — Showcase</title><link rel="stylesheet" href="../timeless.css">
+<style>
+body{padding-bottom:64px}.hero{padding:64px 0 40px;border-bottom:2px solid var(--timeless-border)}
+.hero h1{font-size:clamp(44px,8vw,88px);line-height:.94;letter-spacing:-.06em;margin:12px 0 20px}
+.hero p{max-width:680px;font-size:20px}.section{padding:40px 0;border-bottom:1px solid var(--timeless-border)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.demo-title{font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.metric{font-size:40px;line-height:1;font-weight:600}
+@media(max-width:700px){.grid,.grid2{grid-template-columns:1fr}.hero{padding-top:40px}}
+</style></head>
+<body>
+<div class="timeless-shell">
+<header class="timeless-nav"><div class="timeless-container row" style="justify-content:space-between">
+<strong>TIMELESS</strong><div class="row"><a href="#components">Components</a><a href="#patterns">Patterns</a>
+<button class="timeless-btn timeless-icon-btn" onclick="toggleTheme()" aria-label="Toggle theme">◐</button></div></div></header>
+<main class="timeless-container">
+<section class="hero"><div class="timeless-kicker">Universal web UI · v1.0</div>
+<h1>Function<br>over fashion.</h1>
+<p>Timeless is a monochrome, flat, brutalist-inspired system for interfaces that should remain clear long after today's visual trends disappear.</p>
+<div class="row" style="margin-top:24px"><button class="timeless-btn timeless-btn-primary">Primary action</button>
+<button class="timeless-btn">Secondary action</button><button class="timeless-btn timeless-btn-ghost">Text action →</button></div></section>
+
+<section class="section" id="components"><h2 class="demo-title">Typography & hierarchy</h2>
+<div class="grid"><div><div class="timeless-kicker">Kicker</div><h2>Clear hierarchy</h2>
+<p>Headings, weight, spacing and borders carry the design. No accent color is required.</p></div>
+<div class="timeless-card"><div class="timeless-kicker">Metric</div><div class="metric">24,800</div><div class="timeless-muted">Monthly active users</div></div>
+<div class="timeless-card timeless-card-inverse"><div class="timeless-kicker">Inverted</div><div class="metric">BLACK / WHITE</div><div>Two tones. No visual noise.</div></div></div></section>
+
+<section class="section"><h2 class="demo-title">Controls</h2><div class="grid2">
+<form class="timeless-card" onsubmit="return false"><div class="timeless-field"><label class="timeless-label">Project name</label>
+<input class="timeless-input" placeholder="Enter a project name"></div><div class="timeless-field" style="margin-top:16px">
+<label class="timeless-label">Project type</label><select class="timeless-select"><option>Web application</option><option>Dashboard</option><option>Utility</option></select></div>
+<div class="row" style="margin-top:16px"><button class="timeless-btn timeless-btn-primary">Save project</button><button class="timeless-btn">Cancel</button></div></form>
+<div><div class="timeless-tabs" role="tablist"><button class="timeless-tab" aria-selected="true">Overview</button>
+<button class="timeless-tab" aria-selected="false">Activity</button><button class="timeless-tab" aria-selected="false">Settings</button></div>
+<p><strong>Tabs are not pills.</strong> Active state uses underline and weight.</p><span class="timeless-badge">STATUS: ACTIVE</span></div></div></section>
+
+<section class="section"><h2 class="demo-title">Data</h2><div class="timeless-table-wrap"><table class="timeless-table">
+<thead><tr><th>Name</th><th>Status</th><th>Updated</th><th>Value</th></tr></thead>
+<tbody><tr><td>Project Alpha</td><td><span class="timeless-badge">ACTIVE</span></td><td class="timeless-mono">2026-09-04</td><td class="timeless-mono">12,480</td></tr>
+<tr><td>Project Beta</td><td><span class="timeless-badge">PAUSED</span></td><td class="timeless-mono">2026-09-02</td><td class="timeless-mono">8,240</td></tr>
+<tr><td>Project Gamma</td><td><span class="timeless-badge">DRAFT</span></td><td class="timeless-mono">2026-08-31</td><td class="timeless-mono">1,120</td></tr></tbody></table></div></section>
+
+<section class="section" id="patterns"><h2 class="demo-title">Functional patterns</h2><div class="grid">
+<div class="timeless-card"><strong>Command bar</strong><p class="timeless-muted">A compact place for search and high-frequency actions.</p>
+<div class="timeless-command"><input class="timeless-input" style="border:0;border-radius:0" placeholder="Search…">
+<button class="timeless-btn timeless-icon-btn" style="border:0;border-left:1px solid currentColor">⌘K</button></div></div>
+<div class="timeless-card"><strong>Empty state</strong><p>Nothing here yet.</p><button class="timeless-btn timeless-btn-primary">Create first item</button></div>
+<div class="timeless-card"><strong>Feedback</strong><p class="timeless-toast" style="border:2px solid currentColor;padding:12px">DONE — Changes saved.</p>
+<p class="timeless-muted">No semantic color is required.</p></div></div></section>
+
+<section class="section"><h2 class="demo-title">Loading</h2><div style="display:grid;gap:8px;max-width:520px">
+<div class="timeless-skeleton"></div><div class="timeless-skeleton" style="width:70%"></div><div class="timeless-skeleton" style="width:48%"></div></div></section>
+
+<section class="section"><div class="timeless-card timeless-card-inverse"><div style="font-size:28px;line-height:1.15;font-weight:600">
+If removing decoration makes the UI confusing, the structure was never strong enough.</div></div></section>
+</main></div>
+<script>function toggleTheme(){const r=document.documentElement;r.dataset.theme=r.dataset.theme==="dark"?"light":"dark"}</script>
+</body></html>
