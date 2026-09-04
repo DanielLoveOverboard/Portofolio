@@ -170,19 +170,27 @@ async function checkAuthSession() {
   initTheme();
 
   // Cek apakah Supabase sudah dikonfigurasi
+  const loginConnStatus = document.getElementById('login-conn-status');
+  const loginConnDetail = document.getElementById('login-conn-detail');
   const configured = isSupabaseConfigured();
+
   if (!configured) {
     if (unconfiguredWarning) unconfiguredWarning.style.display = 'block';
     if (statusBadge) {
-      statusBadge.innerHTML = `<span class="status-dot" style="opacity:0.3"></span> OFFLINE MOCK`;
+      statusBadge.innerHTML = `<span class="status-dot" style="opacity:0.3"></span> BELUM TERHUBUNG`;
     }
+    if (loginConnStatus) loginConnStatus.textContent = 'BELUM AKTIF';
+    if (loginConnDetail) loginConnDetail.textContent = 'Kredensial belum terdeteksi. Gunakan form di atas untuk menghubungkan.';
     // Tampilkan form login sebagai mock
     if (loginView) loginView.style.display = 'block';
     if (dashboardView) dashboardView.style.display = 'none';
     return;
   }
 
+  const cleanCfg = typeof getCleanConfig === 'function' ? getCleanConfig() : (window.getCleanConfig ? window.getCleanConfig() : { url: '' });
   if (unconfiguredWarning) unconfiguredWarning.style.display = 'none';
+  if (loginConnStatus) loginConnStatus.textContent = 'SIAP / TERHUBUNG';
+  if (loginConnDetail) loginConnDetail.textContent = 'Target: ' + (cleanCfg.url || 'Supabase');
 
   try {
     const session = await getAdminSession();
@@ -211,16 +219,50 @@ async function checkAuthSession() {
 function setupAdminEvents() {
   if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
 
+  // Quick Config Form (jika user memasukkan kredensial langsung lewat browser)
+  const quickForm = document.getElementById('quick-config-form');
+  if (quickForm) {
+    const urlInput = document.getElementById('quick-supabase-url');
+    const keyInput = document.getElementById('quick-supabase-key');
+    if (urlInput && localStorage.getItem('timeless_supabase_url')) {
+      urlInput.value = localStorage.getItem('timeless_supabase_url');
+    }
+    if (keyInput && localStorage.getItem('timeless_supabase_key')) {
+      keyInput.value = localStorage.getItem('timeless_supabase_key');
+    }
+
+    quickForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const inputUrl = document.getElementById('quick-supabase-url').value.trim();
+      const inputKey = document.getElementById('quick-supabase-key').value.trim();
+
+      if (!inputUrl.startsWith('https://') || inputKey.length < 20) {
+        showFeedback('URL harus diawali https:// dan Anon Key harus valid.', true);
+        return;
+      }
+
+      localStorage.setItem('timeless_supabase_url', inputUrl);
+      localStorage.setItem('timeless_supabase_key', inputKey);
+      SUPABASE_CONFIG.url = inputUrl;
+      SUPABASE_CONFIG.anonKey = inputKey;
+
+      showFeedback('Kredensial Supabase berhasil disimpan! Menghubungkan...');
+      setTimeout(() => {
+        window.location.reload();
+      }, 800);
+    });
+  }
+
   // Form Login
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('login-email').value;
+      const email = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
       const submitBtn = document.getElementById('login-submit-btn');
 
       if (!isSupabaseConfigured()) {
-        showFeedback('Kredensial Supabase belum diisi di js/config.js. Harap baca panduan setup.', true);
+        showFeedback('Kredensial Supabase belum diisi. Gunakan form di atas untuk memasukkan URL & Anon Key.', true);
         return;
       }
 
@@ -232,7 +274,13 @@ function setupAdminEvents() {
         showFeedback('Login berhasil!');
         checkAuthSession();
       } catch (err) {
-        showFeedback(`Login gagal: ${err.message}`, true);
+        let msg = err.message || '';
+        if (msg.toLowerCase().includes('invalid login credentials')) {
+          msg = 'Email atau password salah. Pastikan Anda sudah membuat akun ini di Supabase Dashboard (Menu: Authentication -> Users -> Add user).';
+        } else if (msg.toLowerCase().includes('email not confirmed')) {
+          msg = 'Email belum dikonfirmasi. Di Supabase Dashboard (Authentication -> Users), centang opsi "Auto Confirm User".';
+        }
+        showFeedback(`Login gagal: ${msg}`, true);
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'MASUK KE DASHBOARD →';

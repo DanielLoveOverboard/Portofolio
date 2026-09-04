@@ -10,7 +10,8 @@
   <!-- Portfolio Custom Stylesheet -->
   <link rel="stylesheet" href="./css/portfolio.css">
 
-  <!-- Supabase JS CDN (Optional fallback for ESM) -->
+  <!-- Supabase JS Local Vendor + CDN Fallback -->
+  <script src="./js/vendor/supabase.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -43,11 +44,28 @@
 
       <!-- NOTIFIKASI KREDENSIAL BELUM DIISI (JIKA BELUM SET DI CONFIG.JS) -->
       <div id="unconfigured-warning" class="timeless-card" style="display:none;margin-bottom:24px;border:2px solid currentColor;">
-        <div class="timeless-kicker" style="margin-bottom:4px;">PERHATIAN // SUPABASE BELUM TERHUBUNG</div>
+        <div class="timeless-kicker" style="margin-bottom:4px;">STATUS // KREDENSIAL SUPABASE BELUM TERHUBUNG</div>
         <p style="margin:0 0 12px 0;line-height:1.5;">
-          Anda belum memasukkan <strong>Project URL</strong> dan <strong>Anon Key</strong> Supabase di dalam file <code>js/config.js</code>.
-          Silakan ikuti panduan lengkap di <a href="./PANDUAN_SUPABASE_DAN_DEPLOY.md" target="_blank"><strong>PANDUAN_SUPABASE_DAN_DEPLOY.md</strong></a> untuk mengaktifkan database dan storage cloud gratis Anda.
+          Kredensial di <code>js/config.js</code> belum terdeteksi aktif di browser ini (kemungkinan karena cache browser atau file belum ter-commit).
         </p>
+        <p style="margin:0 0 16px 0;font-size:13px;opacity:0.85;">
+          <strong>Solusi Cepat:</strong> Masukkan Project URL dan Anon Key di bawah ini untuk menghubungkan browser secara instan:
+        </p>
+
+        <form id="quick-config-form" style="display:grid;gap:12px;max-width:580px;background:var(--timeless-bg);padding:16px;border:1px solid var(--timeless-border);margin-bottom:12px;">
+          <div class="timeless-field">
+            <label class="timeless-label" style="font-size:12px;">Project URL (contoh: https://xyzabcdefghijkl.supabase.co)</label>
+            <input type="url" id="quick-supabase-url" class="timeless-input" placeholder="https://xyzabcdefghijkl.supabase.co" required />
+          </div>
+          <div class="timeless-field">
+            <label class="timeless-label" style="font-size:12px;">Anon Public Key (diawali eyJ...)</label>
+            <input type="text" id="quick-supabase-key" class="timeless-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." required />
+          </div>
+          <button type="submit" class="timeless-btn timeless-btn-primary" style="font-size:12px;min-height:38px;">
+            SIMPAN & HUBUNGKAN SEKARANG →
+          </button>
+        </form>
+
         <span class="timeless-badge">STATUS: OFFLINE MOCK MODE</span>
       </div>
 
@@ -63,9 +81,18 @@
         <div class="timeless-card timeless-border-strong">
           <div class="timeless-kicker" style="margin-bottom:8px;">RESTRICTED ENTRANCE // OWNER ONLY</div>
           <h2 style="margin:0 0 8px 0;font-size:24px;">Muh. Fachri Akbar — Admin</h2>
-          <p class="timeless-muted" style="margin:0 0 24px 0;font-size:13px;line-height:1.5;">
-            Pintu masuk khusus pemilik portofolio untuk mengunggah dan mengelola karya hobi (3D, fotografi, lukisan, sketsa).
+          <p class="timeless-muted" style="margin:0 0 16px 0;font-size:13px;line-height:1.5;">
+            Pintu masuk khusus pemilik portofolio untuk mengunggah dan mengelola karya hobi.
           </p>
+
+          <!-- DIAGNOSTIK KONEKSI -->
+          <div style="margin-bottom:20px;padding:10px 12px;border:1px solid var(--timeless-border);font-family:var(--timeless-font-mono);font-size:11px;background:var(--timeless-bg);">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span>DATABASE:</span>
+              <strong id="login-conn-status">MEMERIKSA...</strong>
+            </div>
+            <div id="login-conn-detail" style="opacity:0.75;font-size:10px;margin-top:4px;word-break:break-all;"></div>
+          </div>
 
           <form id="login-form">
             <div class="timeless-field" style="margin-bottom:16px;">

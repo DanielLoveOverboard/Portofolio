@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS public.artworks (
     category TEXT NOT NULL CHECK (category IN ('3D', 'Photography', 'Painting', 'Sketching', 'Other')),
     year TEXT DEFAULT '',
     medium TEXT DEFAULT '',
-    tags TEXT DEFAULT '', -- Tag karya, dipisahkan koma (misal: "cyberpunk, blender, neon")
+    tags TEXT DEFAULT '', -- Tag karya dipisahkan koma (misal: "cyberpunk, blender, neon")
     description TEXT DEFAULT '',
     image_url TEXT NOT NULL,
     storage_path TEXT DEFAULT '',
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS public.artworks (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Tambahkan kolom tags jika tabel sudah terlanjur dibuat sebelumnya
+-- Tambahkan kolom tags jika tabel sudah dibuat sebelumnya tanpa tags
 DO $$ 
 BEGIN 
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='artworks' AND column_name='tags') THEN
@@ -33,7 +33,7 @@ BEGIN
     END IF;
 END $$;
 
--- Indeks untuk mempercepat query filtering kategori dan sorting tanggal
+-- Indeks untuk query filtering kategori dan sorting tanggal
 CREATE INDEX IF NOT EXISTS idx_artworks_category ON public.artworks (category);
 CREATE INDEX IF NOT EXISTS idx_artworks_created_at ON public.artworks (created_at DESC);
 
@@ -79,44 +79,42 @@ USING (true);
 -- ==============================================================================
 -- 3. STORAGE BUCKET UNTUK GAMBAR KARYA ('portfolio-media')
 -- ==============================================================================
-INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-VALUES (
-    'portfolio-media', 
-    'portfolio-media', 
-    true, 
-    20971520, -- Maks. 20MB per gambar
-    ARRAY['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']
-)
-ON CONFLICT (id) DO UPDATE SET 
-    public = true,
-    file_size_limit = 20971520,
-    allowed_mime_types = ARRAY['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+-- Catatan: RLS pada storage.objects SUDAH aktif secara default di Supabase.
+-- Jangan menjalankan 'ALTER TABLE storage.objects' karena akan memicu error 42501.
 
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+-- Membuat bucket penyimpanan jika belum ada
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('portfolio-media', 'portfolio-media', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
 
+-- Kebijakan Akses File di Storage:
 DROP POLICY IF EXISTS "Public can read portfolio media" ON storage.objects;
 DROP POLICY IF EXISTS "Authenticated users can upload portfolio media" ON storage.objects;
 DROP POLICY IF EXISTS "Authenticated users can update portfolio media" ON storage.objects;
 DROP POLICY IF EXISTS "Authenticated users can delete portfolio media" ON storage.objects;
 
+-- A. Semua orang dapat melihat / memuat gambar karya
 CREATE POLICY "Public can read portfolio media"
 ON storage.objects 
 FOR SELECT
 TO anon, authenticated
 USING (bucket_id = 'portfolio-media');
 
+-- B. Hanya pemilik terotentikasi yang dapat mengunggah file baru
 CREATE POLICY "Authenticated users can upload portfolio media"
 ON storage.objects 
 FOR INSERT 
 TO authenticated 
 WITH CHECK (bucket_id = 'portfolio-media');
 
+-- C. Hanya pemilik terotentikasi yang dapat memperbarui file
 CREATE POLICY "Authenticated users can update portfolio media"
 ON storage.objects 
 FOR UPDATE 
 TO authenticated 
 USING (bucket_id = 'portfolio-media');
 
+-- D. Hanya pemilik terotentikasi yang dapat menghapus file
 CREATE POLICY "Authenticated users can delete portfolio media"
 ON storage.objects 
 FOR DELETE 

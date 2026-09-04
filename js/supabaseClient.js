@@ -1,42 +1,59 @@
 // ==============================================================================
 // TIMELESS PORTFOLIO — SUPABASE CLIENT & DATA ACCESS LAYER
+// Author: Muh. Fachri Akbar
 // ==============================================================================
-import { SUPABASE_CONFIG, isSupabaseConfigured } from './config.js';
+import { SUPABASE_CONFIG, isSupabaseConfigured, getCleanConfig } from './config.js';
 import { MOCK_ARTWORKS } from './mockData.js';
 
 let supabase = null;
 
-// Inisialisasi Supabase Client jika kredensial sudah dikonfigurasi
+/**
+ * Mendapatkan atau menginisialisasi instance Supabase Client
+ */
 export async function getClient() {
   if (supabase) return supabase;
   if (!isSupabaseConfigured()) return null;
 
+  const { url, anonKey } = getCleanConfig();
+
   try {
-    // Memuat Supabase SDK baik dari ESM maupun global CDN jika tersedia
+    // 1. Coba gunakan library vendor lokal (js/vendor/supabase.js) atau CDN global
     if (window.supabase && typeof window.supabase.createClient === 'function') {
-      supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-    } else {
-      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-      supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+      supabase = window.supabase.createClient(url, anonKey, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        }
+      });
+      return supabase;
     }
+
+    // 2. Fallback ke import ESM jika script tag belum siap
+    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+    supabase = createClient(url, anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
     return supabase;
   } catch (err) {
-    console.warn('Gagal menginisialisasi Supabase Client, beralih ke Mock Data:', err);
+    console.error('Gagal menginisialisasi Supabase Client:', err);
     return null;
   }
 }
 
 /**
- * Mengambil daftar karya, opsional difilter berdasarkan kategori
- * @param {string} category - 'ALL', '3D', 'Photography', 'Painting', 'Sketching'
- * @returns {Promise<{data: Array, isLive: boolean, error: string|null}>}
+ * Mengambil daftar karya dari Supabase atau Mock Data
  */
 export async function fetchArtworks(category = 'ALL') {
   const client = await getClient();
 
   // Jika Supabase belum dikonfigurasi, gunakan Mock Data
   if (!client) {
-    let list = [...MOCK_ARTWORKS];
+    let list = [...(window.MOCK_ARTWORKS || MOCK_ARTWORKS)];
     if (category && category.toUpperCase() !== 'ALL') {
       list = list.filter(item => item.category.toLowerCase() === category.toLowerCase());
     }
@@ -59,9 +76,8 @@ export async function fetchArtworks(category = 'ALL') {
 
     return { data: data || [], isLive: true, error: null };
   } catch (err) {
-    console.error('Error saat mengambil data dari Supabase:', err);
-    // Fallback darurat ke Mock Data agar UI tidak rusak jika koneksi database terputus
-    let list = [...MOCK_ARTWORKS];
+    console.error('Error query Supabase:', err);
+    let list = [...(window.MOCK_ARTWORKS || MOCK_ARTWORKS)];
     if (category && category.toUpperCase() !== 'ALL') {
       list = list.filter(item => item.category.toLowerCase() === category.toLowerCase());
     }
@@ -71,21 +87,16 @@ export async function fetchArtworks(category = 'ALL') {
 
 /**
  * Upload gambar karya ke Supabase Storage (bucket: 'portfolio-media')
- * @param {File} file 
- * @returns {Promise<{publicUrl: string, storagePath: string}>}
  */
 export async function uploadArtworkImage(file) {
   const client = await getClient();
-  if (!client) {
-    throw new Error('Supabase belum dikonfigurasi di js/config.js');
-  }
+  if (!client) throw new Error('Koneksi Supabase belum aktif.');
 
   const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
   if (!allowedTypes.includes(file.type)) {
     throw new Error('Format file tidak didukung. Harap upload gambar (JPG, PNG, WebP, GIF, SVG).');
   }
 
-  // Maksimum 20MB
   if (file.size > 20 * 1024 * 1024) {
     throw new Error('Ukuran file melebihi batas 20MB.');
   }
@@ -101,7 +112,7 @@ export async function uploadArtworkImage(file) {
     });
 
   if (uploadError) {
-    throw new Error(`Gagal upload gambar: ${uploadError.message}`);
+    throw new Error(`Gagal upload ke storage: ${uploadError.message}`);
   }
 
   const { data: { publicUrl } } = client.storage
@@ -113,11 +124,10 @@ export async function uploadArtworkImage(file) {
 
 /**
  * Menambahkan karya baru ke tabel 'artworks'
- * @param {Object} artwork 
  */
 export async function insertArtwork(artwork) {
   const client = await getClient();
-  if (!client) throw new Error('Supabase belum dikonfigurasi');
+  if (!client) throw new Error('Koneksi Supabase belum aktif.');
 
   const { data, error } = await client
     .from('artworks')
@@ -143,14 +153,11 @@ export async function insertArtwork(artwork) {
 
 /**
  * Menghapus karya dari tabel 'artworks' dan file terkait di Storage
- * @param {string} id - UUID karya
- * @param {string} storagePath - Jalur file di bucket
  */
 export async function deleteArtwork(id, storagePath) {
   const client = await getClient();
-  if (!client) throw new Error('Supabase belum dikonfigurasi');
+  if (!client) throw new Error('Koneksi Supabase belum aktif.');
 
-  // Hapus baris di database
   const { error: dbError } = await client
     .from('artworks')
     .delete()
@@ -158,12 +165,11 @@ export async function deleteArtwork(id, storagePath) {
 
   if (dbError) throw dbError;
 
-  // Hapus file di Storage jika ada
   if (storagePath) {
     try {
       await client.storage.from('portfolio-media').remove([storagePath]);
     } catch (storageErr) {
-      console.warn('File fisik di storage mungkin sudah terhapus:', storageErr);
+      console.warn('File fisik storage mungkin sudah terhapus:', storageErr);
     }
   }
 
@@ -175,7 +181,13 @@ export async function deleteArtwork(id, storagePath) {
  */
 export async function signInAdmin(email, password) {
   const client = await getClient();
-  if (!client) throw new Error('Supabase belum dikonfigurasi di js/config.js');
+  if (!client) {
+    const { url, anonKey } = getCleanConfig();
+    if (!url || !anonKey) {
+      throw new Error('Kredensial Supabase (URL / Anon Key) belum terisi.');
+    }
+    throw new Error('Supabase SDK tidak dapat diinisialisasi.');
+  }
 
   const { data, error } = await client.auth.signInWithPassword({
     email: email.trim(),
@@ -197,4 +209,18 @@ export async function getAdminSession() {
   if (!client) return null;
   const { data: { session } } = await client.auth.getSession();
   return session;
+}
+
+// Global reference
+if (typeof window !== 'undefined') {
+  window.SupabaseApp = {
+    getClient,
+    fetchArtworks,
+    uploadArtworkImage,
+    insertArtwork,
+    deleteArtwork,
+    signInAdmin,
+    signOutAdmin,
+    getAdminSession
+  };
 }

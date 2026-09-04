@@ -143,3 +143,7 @@ export const MOCK_ARTWORKS = [
     created_at: "2025-04-10T00:00:00Z"
   }
 ];
+
+if (typeof window !== 'undefined') {
+  window.MOCK_ARTWORKS = MOCK_ARTWORKS;
+}
