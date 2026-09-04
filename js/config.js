@@ -6,8 +6,8 @@
 // KREDENSIAL DEFAULT PROYEK
 // Anda dapat mengisinya di sini, atau memasukkannya langsung via formulir di admin.html
 const HARDCODED_CONFIG = {
-  url: '',
-  anonKey: '',
+  url: 'https://uytedcoadyshicqghkhq.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5dGVkY29hZHlzaGljcWdoa2hxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MjMyNzAsImV4cCI6MjEwNDA5OTI3MH0.K84wOQWr7fM3fUVtnO3gRjQGugMGCDWWwacfS4cRyPc',
 };
 
 // Ambil kredensial dari browser localStorage jika pernah dimasukkan via web
