@@ -11,10 +11,10 @@
 
 export const SUPABASE_CONFIG = {
   // Contoh: 'https://abcdefghijklmnopq.supabase.co'
-  url: '',
+  url: 'https://uytedcoadyshicqghkhq.supabase.co',
 
   // Contoh: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
-  anonKey: '',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5dGVkY29hZHlzaGljcWdoa2hxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MjMyNzAsImV4cCI6MjEwNDA5OTI3MH0.K84wOQWr7fM3fUVtnO3gRjQGugMGCDWWwacfS4cRyPc',
 };
 
 /**
