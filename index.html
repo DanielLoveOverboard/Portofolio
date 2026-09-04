@@ -40,28 +40,28 @@
         </p>
       </section>
 
-      <!-- LIVE METRICS & STATS BAR -->
-      <section class="stats-bar" aria-label="Statistik Karya">
-        <div class="stat-item">
+      <!-- LIVE METRICS & STATS BAR (INTERACTIVE CATEGORY FILTER) -->
+      <section class="stats-bar" id="stats-bar" role="tablist" aria-label="Filter Kategori Berdasarkan Statistik">
+        <button class="stat-item active" data-category="ALL" role="tab" aria-selected="true" title="Tampilkan Semua Karya">
           <div class="stat-num" id="stat-total">00</div>
           <div class="stat-label">Total Works</div>
-        </div>
-        <div class="stat-item">
+        </button>
+        <button class="stat-item" data-category="3D" role="tab" aria-selected="false" title="Filter Karya 3D & CGI">
           <div class="stat-num" id="stat-3d">00</div>
           <div class="stat-label">3D & CGI</div>
-        </div>
-        <div class="stat-item">
+        </button>
+        <button class="stat-item" data-category="Photography" role="tab" aria-selected="false" title="Filter Karya Photography">
           <div class="stat-num" id="stat-photo">00</div>
           <div class="stat-label">Photography</div>
-        </div>
-        <div class="stat-item">
+        </button>
+        <button class="stat-item" data-category="Painting" role="tab" aria-selected="false" title="Filter Karya Painting">
           <div class="stat-num" id="stat-paint">00</div>
           <div class="stat-label">Painting</div>
-        </div>
-        <div class="stat-item">
+        </button>
+        <button class="stat-item" data-category="Sketching" role="tab" aria-selected="false" title="Filter Karya Sketching">
           <div class="stat-num" id="stat-sketch">00</div>
           <div class="stat-label">Sketching</div>
-        </div>
+        </button>
       </section>
 
       <!-- FILTER & SEARCH TOOLBAR -->

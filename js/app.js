@@ -86,18 +86,33 @@ function updateStats(artworks) {
   setTabCount('Sketching', countSketch);
 }
 
-// Filter karya berdasarkan klik pada tag
-export function filterByTag(tag) {
-  currentCategory = 'ALL';
-  currentSearch = tag.toLowerCase().trim();
-  if (searchInput) searchInput.value = `#${tag}`;
+// Pilih kategori karya dan sinkronkan tombol stat-item dan cat-btn
+export function selectCategory(cat) {
+  currentCategory = cat || 'ALL';
 
-  document.querySelectorAll('.cat-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.category === 'ALL');
+  // Sinkronkan tombol stat-item (interaktif di mobile & desktop)
+  document.querySelectorAll('.stat-item').forEach(b => {
+    const isSelected = (b.dataset.category || '').toUpperCase() === currentCategory.toUpperCase();
+    b.classList.toggle('active', isSelected);
+    b.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+  });
+
+  // Sinkronkan tab kategori (jika ada di desktop)
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    const isSelected = (b.dataset.category || '').toUpperCase() === currentCategory.toUpperCase();
+    b.classList.toggle('active', isSelected);
+    b.setAttribute('aria-selected', isSelected ? 'true' : 'false');
   });
 
   renderGallery();
-  
+}
+
+// Filter karya berdasarkan klik pada tag
+export function filterByTag(tag) {
+  currentSearch = tag.toLowerCase().trim();
+  if (searchInput) searchInput.value = `#${tag}`;
+  selectCategory('ALL');
+
   // Scroll ke galeri jika di mobile
   if (galleryGrid) {
     galleryGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -282,15 +297,9 @@ function prevModal() {
 
 // Reset filters
 window.resetFilters = function() {
-  currentCategory = 'ALL';
   currentSearch = '';
   if (searchInput) searchInput.value = '';
-  
-  document.querySelectorAll('.cat-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.category === 'ALL');
-  });
-
-  renderGallery();
+  selectCategory('ALL');
 };
 
 // Event Listeners
@@ -300,17 +309,26 @@ function setupEventListeners() {
     themeToggleBtn.addEventListener('click', toggleTheme);
   }
 
-  // Filter Kategori
+  // Filter Kategori via Interactive Stats Bar (Utama di Mobile, sinkron di Desktop)
+  const statsBar = document.getElementById('stats-bar');
+  if (statsBar) {
+    statsBar.addEventListener('click', (e) => {
+      const btn = e.target.closest('.stat-item');
+      if (!btn) return;
+      const cat = btn.dataset.category;
+      if (!cat) return;
+      selectCategory(cat);
+    });
+  }
+
+  // Filter Kategori via Tabs (di Desktop)
   if (categoryNav) {
     categoryNav.addEventListener('click', (e) => {
       const btn = e.target.closest('.cat-btn');
       if (!btn) return;
-      
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      currentCategory = btn.dataset.category;
-      renderGallery();
+      const cat = btn.dataset.category;
+      if (!cat) return;
+      selectCategory(cat);
     });
   }
 

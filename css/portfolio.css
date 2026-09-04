@@ -73,7 +73,40 @@
 
 .stat-item {
   padding: 12px 16px;
+  border: none;
   border-right: 1px solid var(--timeless-border);
+  background: var(--timeless-bg);
+  color: var(--timeless-fg);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 48px;
+  transition: background 120ms ease, color 120ms ease;
+  position: relative;
+  outline: none;
+}
+
+.stat-item:hover {
+  text-decoration: underline;
+}
+
+.stat-item:focus-visible {
+  outline: 2px solid var(--timeless-focus);
+  outline-offset: -2px;
+  z-index: 2;
+}
+
+.stat-item.active {
+  background: var(--timeless-inverse-bg);
+  color: var(--timeless-inverse-fg);
+  font-weight: 700;
+}
+
+.stat-item.active .stat-label {
+  opacity: 0.9;
 }
 
 .stat-item:last-child {
@@ -562,24 +595,11 @@
 
   /* Category Filter & Search */
   .filter-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
+  /* Khusus Handphone: Sembunyikan Navigasi Kategori (Fungsi filter dipindahkan ke tabel stats di atas) */
   .category-nav {
-    display: flex;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    width: 100%;
-    border-bottom: 1px solid var(--timeless-border);
-  }
-  .cat-btn {
-    flex: 0 0 auto;
-    padding: 10px 14px;
-    font-size: 12px;
-    min-height: 44px;
+    display: none !important;
   }
   .search-box {
     width: 100%;
