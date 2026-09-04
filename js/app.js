@@ -2,6 +2,13 @@
 // TIMELESS PORTFOLIO — MAIN APPLICATION CONTROLLER
 // Personal Archive: Muh. Fachri Akbar
 // ==============================================================================
+
+// Pembersih URL otomatis agar /index.html tidak pernah muncul di address bar
+if (typeof window !== 'undefined' && window.location.pathname.endsWith('/index.html')) {
+  const cleanPath = window.location.pathname.replace(/\/index\.html$/, '/') + window.location.search + window.location.hash;
+  window.history.replaceState(null, '', cleanPath);
+}
+
 import { fetchArtworks } from './supabaseClient.js';
 import { isSupabaseConfigured } from './config.js';
 
@@ -16,7 +23,6 @@ let activeModalIndex = -1;
 const galleryGrid = document.getElementById('gallery-grid');
 const categoryNav = document.getElementById('category-nav');
 const searchInput = document.getElementById('search-input');
-const statusBadge = document.getElementById('system-status');
 const modalBackdrop = document.getElementById('artwork-modal');
 const modalCloseBtn = document.getElementById('modal-close-btn');
 const modalPrevBtn = document.getElementById('modal-prev-btn');
@@ -47,18 +53,6 @@ export function toggleTheme() {
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.dataset.theme = next;
   localStorage.setItem('timeless_theme', next);
-}
-
-// Update status koneksi Supabase di header
-function updateStatusBadge(isLive) {
-  if (!statusBadge) return;
-  if (isLive) {
-    statusBadge.innerHTML = `<span class="status-dot"></span> LIVE: SUPABASE`;
-    statusBadge.title = 'Terhubung ke database Supabase Anda';
-  } else {
-    statusBadge.innerHTML = `<span class="status-dot" style="opacity:0.3"></span> DEMO MODE`;
-    statusBadge.title = 'Menampilkan data demo lokal. Hubungkan Supabase di js/config.js';
-  }
 }
 
 // Update baris statistik jumlah karya
@@ -378,7 +372,6 @@ async function initApp() {
   const { data, isLive, error } = await fetchArtworks('ALL');
   allArtworks = data || [];
 
-  updateStatusBadge(isLive);
   updateStats(allArtworks);
   renderGallery();
 }
