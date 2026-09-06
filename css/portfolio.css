@@ -7,12 +7,265 @@
    - Responsive composition change for Desktop and Mobile
    ============================================================================== */
 
-/* --- LAYOUT & WRAPPER --- */
-.portfolio-header {
-  border-bottom: 2px solid var(--timeless-border);
-  padding: 32px 0 24px;
+/* Global Viewport & Shell Containment */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
+.timeless-shell {
+  overflow-x: hidden;
+  max-width: 100vw;
+  min-height: 100vh;
+}
+
+/* --- ENHANCED CONTAINER (FULL-WIDTH READY) --- */
+.timeless-container {
+  width: min(1360px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* --- FULL-BLEED ARCHITECTURE (PREVENTS CUTOFF LINES ON PC) --- */
+.full-bleed-nav {
+  width: 100%;
+  border-bottom: 1px solid var(--timeless-border);
+  background: var(--timeless-bg);
+  display: block;
+}
+
+.nav-full-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: 100%;
+  padding: 0 32px;
+  min-height: 56px;
+}
+
+.nav-left-anchor {
+  /* Left spacer: clean breathing room since GALLERY is removed */
+  min-width: 60px;
+}
+
+.full-bleed-strip {
+  width: 100%;
+  border-bottom: 1px solid var(--timeless-border);
+  background: var(--timeless-bg);
+}
+
+.header-strip {
+  padding: 36px 0 24px;
+}
+
+.stats-strip {
+  padding: 0;
+}
+
+.contact-header-strip {
+  padding: 36px 0 24px;
+}
+
+.content-container {
+  padding-top: 28px;
+  padding-bottom: 56px;
+}
+
+.full-bleed-footer {
+  width: 100%;
+  border-top: 1px solid var(--timeless-border);
+  background: var(--timeless-bg);
+  padding: 36px 0 48px;
+  margin-top: 48px;
+}
+
+/* --- BRUTALIST NAV HUB (KOTAK & KASAR) --- */
+.nav-hub {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 16px;
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-hub-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--timeless-bg);
+  padding: 3px;
+  border: 1px solid transparent;
+  transition: border-color 500ms cubic-bezier(0.16, 1, 0.3, 1), background 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tab buttons: STRICT KOTAK, ZERO BORDER RADIUS */
+.nav-tab-box {
+  background: transparent;
+  color: var(--timeless-fg);
+  border: 1px solid transparent;
+  border-radius: 0 !important; /* KOTAK DAN KASAR */
+  padding: 8px 16px;
+  font-family: var(--timeless-font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+  white-space: nowrap;
+  outline: none;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-tab-box .tab-index {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.nav-tab-box:focus-visible {
+  outline: 2px solid var(--timeless-focus);
+  outline-offset: 1px;
+}
+
+/* --- DESKTOP HOVER REVEAL INTERACTION ---
+   Default resting state: Displays ONLY clean text of active view.
+   Hover state (cursor mendekat): Expands choices About, Gallery, and Contact in sharp boxy frames smoothly and gently! */
+@media (min-width: 641px) {
+  .nav-hub:hover .nav-hub-inner {
+    border-color: var(--timeless-border);
+    background: var(--timeless-bg);
+    transition: border-color 650ms cubic-bezier(0.16, 1, 0.3, 1), background 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Inactive tabs when cursor is NOT hovering: collapsed smoothly and gently */
+  .nav-tab-box:not(.active) {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 8px 0;
+    margin: 0;
+    border-color: transparent;
+    pointer-events: none;
+    transform: scaleX(0.85);
+    transition: max-width 550ms cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 380ms ease,
+                padding 550ms cubic-bezier(0.16, 1, 0.3, 1),
+                margin 550ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 80ms;
+  }
+
+  /* Active tab when cursor is NOT hovering: clean typography text */
+  .nav-tab-box.active {
+    background: transparent;
+    color: var(--timeless-fg);
+    border: 1px solid transparent;
+    padding: 8px 16px;
+    position: relative;
+    transition: background 550ms cubic-bezier(0.16, 1, 0.3, 1),
+                color 550ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 550ms cubic-bezier(0.16, 1, 0.3, 1),
+                padding 550ms cubic-bezier(0.16, 1, 0.3, 1),
+                margin 550ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-tab-box.active::after {
+    content: " ▾";
+    font-size: 11px;
+    opacity: 0.55;
+    margin-left: 4px;
+    display: inline-block;
+    transition: opacity 300ms ease;
+  }
+
+  /* REVEAL ON HOVER (Cursor mendekat - Slower, Butter Smooth & Elegant) */
+  .nav-hub:hover .nav-tab-box:not(.active) {
+    max-width: 145px;
+    opacity: 1;
+    padding: 8px 14px;
+    margin: 0 2px;
+    border: 1px solid var(--timeless-border);
+    pointer-events: auto;
+    transform: scaleX(1);
+    background: var(--timeless-bg);
+    color: var(--timeless-fg);
+    transition: max-width 650ms cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 480ms cubic-bezier(0.16, 1, 0.3, 1) 120ms,
+                padding 650ms cubic-bezier(0.16, 1, 0.3, 1),
+                margin 650ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 650ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 350ms ease,
+                background 160ms ease,
+                color 160ms ease;
+    transition-delay: 0ms;
+  }
+
+  .nav-hub:hover .nav-tab-box.active {
+    background: var(--timeless-inverse-bg);
+    color: var(--timeless-inverse-fg);
+    border: 1px solid var(--timeless-inverse-bg);
+    padding: 8px 14px;
+    margin: 0 2px;
+    transition: background 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                color 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                padding 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                margin 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0ms;
+  }
+
+  .nav-hub:hover .nav-tab-box.active::after {
+    display: none;
+  }
+
+  /* When hovering directly on an inactive tab (About / Contact): Invert both background AND color together */
+  .nav-hub:hover .nav-tab-box:not(.active):hover {
+    background: var(--timeless-inverse-bg) !important;
+    color: var(--timeless-inverse-fg) !important;
+    border-color: var(--timeless-inverse-bg) !important;
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+  }
+
+  .nav-hub:hover .nav-tab-box:not(.active):active {
+    background: var(--timeless-inverse-bg) !important;
+    color: var(--timeless-inverse-fg) !important;
+    border-color: var(--timeless-inverse-bg) !important;
+    transform: scale(0.98);
+  }
+}
+
+/* Header right actions */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.header-actions .timeless-btn {
+  border-radius: 0 !important;
+  min-height: 36px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.theme-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.theme-label {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+/* Legacy support fallback */
 .brand-row {
   display: flex;
   justify-content: space-between;
@@ -21,26 +274,313 @@
   flex-wrap: wrap;
 }
 
-.brand-title {
-  font-size: clamp(28px, 4.5vw, 44px);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  margin: 0 0 8px 0;
-  text-transform: uppercase;
+.portfolio-header {
+  border-bottom: 2px solid var(--timeless-border);
+  padding: 32px 0 24px;
 }
 
-.brand-subtitle {
+/* --- VIEW PANES TRANSITION --- */
+.view-pane {
+  animation: fadeInPane 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInPane {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- VIEW 1: ABOUT HERO & EXPANDABLE DETAILS --- */
+.about-hero-container {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 56px); /* Full viewport height in idle state: introduces Fachri exclusively */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 60px 24px;
+  border-bottom: 1px solid var(--timeless-border);
+}
+
+.about-halftone-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/halftone-wave.svg');
+  background-repeat: no-repeat;
+  background-position: center 25%;
+  background-size: cover;
+  pointer-events: none;
+  opacity: 0.13; /* Halus & elegan di mode terang: tidak lagi nabrak dengan teks hitam */
+  z-index: 0;
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 46%, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,1) 100%);
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 46%, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,1) 100%);
+}
+
+[data-theme="dark"] .about-halftone-backdrop {
+  opacity: 0.28; /* Halus bercahaya di mode gelap */
+  filter: invert(1);
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 46%, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,1) 100%);
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 46%, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,1) 100%);
+}
+
+.about-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 40px 16px 20px;
+}
+
+.about-hero-title {
+  font-size: clamp(34px, 5.8vw, 68px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin: 0 0 32px 0;
+  color: var(--timeless-fg);
+  text-rendering: optimizeLegibility;
+}
+
+.about-trigger-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.about-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--timeless-bg);
+  border: 1px solid var(--timeless-border);
+  color: var(--timeless-fg);
+  font-family: var(--timeless-font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  border-radius: 0 !important; /* KOTAK DAN KASAR */
+  cursor: pointer;
+  transition: all 140ms ease;
+  line-height: 1;
+}
+
+.about-expand-btn:hover {
+  background: var(--timeless-inverse-bg);
+  color: var(--timeless-inverse-fg);
+  text-decoration: none;
+}
+
+.about-expand-btn:focus-visible {
+  outline: 2px solid var(--timeless-focus);
+  outline-offset: 2px;
+}
+
+.about-btn-arrow {
+  font-family: var(--timeless-font-mono);
   font-size: 14px;
-  line-height: 1.4;
-  max-width: 580px;
+  transition: transform 220ms ease;
+}
+
+/* Expandable Detail Section */
+.about-detail-pane {
+  position: relative;
+  z-index: 1;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 380ms cubic-bezier(0.16, 1, 0.3, 1), opacity 280ms ease, margin-top 280ms ease;
+  margin-top: 0;
+  text-align: left;
+}
+
+.about-detail-pane.open {
+  max-height: 1600px;
+  opacity: 1;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--timeless-border);
+}
+
+.about-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.about-detail-card {
+  border: 1px solid var(--timeless-border);
+  background: var(--timeless-bg);
+  padding: 24px;
+}
+
+.about-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 8px 0 12px;
+  letter-spacing: -0.02em;
+}
+
+.about-card-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--timeless-fg);
   margin: 0;
 }
 
-.header-actions {
+.about-discipline-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.about-discipline-list li {
+  border-bottom: 1px dashed var(--timeless-border);
+  padding-bottom: 8px;
+}
+
+.about-discipline-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.about-tools-wrap {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  margin-top: 8px;
+}
+
+.about-tool-tag {
+  font-family: var(--timeless-font-mono);
+  font-size: 11px;
+  padding: 4px 10px;
+  border: 1px solid var(--timeless-border);
+  background: var(--timeless-bg);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* --- VIEW 2: GALLERY VIEW SPECIFIC HEADER --- */
+.gallery-hero-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.gallery-headline {
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin: 4px 0 0 0;
+  text-transform: uppercase;
+}
+
+.gallery-subtext {
+  font-size: 14px;
+  line-height: 1.4;
+  max-width: 520px;
+  margin: 0;
+}
+
+/* --- VIEW 3: CONTACT PANE --- */
+.contact-pane-wrapper {
+  padding: 32px 0 60px;
+}
+
+.contact-header-block {
+  border-bottom: 2px solid var(--timeless-border);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+
+.contact-main-title {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  margin: 6px 0 10px;
+  text-transform: uppercase;
+}
+
+.contact-subtext {
+  font-size: 15px;
+  line-height: 1.5;
+  max-width: 600px;
+  margin: 0;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.contact-channel-card,
+.contact-form-card {
+  border: 1px solid var(--timeless-border);
+  background: var(--timeless-bg);
+  padding: 24px;
+}
+
+.contact-link-large {
+  display: block;
+  font-size: clamp(18px, 2.6vw, 24px);
+  font-weight: 700;
+  color: var(--timeless-fg);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+  margin-top: 8px;
+  word-break: break-all;
+}
+
+.contact-link-large:hover {
+  text-decoration: underline;
+}
+
+.contact-social-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.contact-social-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--timeless-border);
+  color: var(--timeless-fg);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.contact-social-item:hover {
+  background: var(--timeless-inverse-bg);
+  color: var(--timeless-inverse-fg);
 }
 
 /* System status indicator */
@@ -63,16 +603,17 @@
   display: inline-block;
 }
 
-/* --- STATS BAR --- */
+/* --- STATS BAR (SEAMLESS IN FULL-BLEED STRIP) --- */
 .stats-bar {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  border-bottom: 1px solid var(--timeless-border);
-  margin-bottom: 24px;
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  border: none;
+  margin-bottom: 0;
 }
 
 .stat-item {
-  padding: 12px 16px;
+  padding: 16px 24px;
   border: none;
   border-right: 1px solid var(--timeless-border);
   background: var(--timeless-bg);
@@ -82,11 +623,16 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 2px;
-  min-height: 48px;
-  transition: background 120ms ease, color 120ms ease;
+  gap: 3px;
+  min-height: 56px;
+  transition: background 140ms ease, color 140ms ease;
   position: relative;
   outline: none;
+  border-radius: 0 !important; /* STRICT KOTAK */
+}
+
+.stat-item:first-child {
+  border-left: none; /* Touches 0% left edge of screen */
 }
 
 .stat-item:hover {
@@ -135,6 +681,21 @@
   gap: 16px;
   margin-bottom: 32px;
   flex-wrap: wrap;
+}
+
+.gallery-filter-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gallery-filter-indicator .timeless-kicker {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+.gallery-filter-indicator .timeless-mono {
+  font-size: 12px;
 }
 
 .category-nav {
@@ -549,6 +1110,101 @@
 }
 
 @media (max-width: 640px) {
+  /* Navigation Bar on Mobile (Kotak & Kasar, always visible) */
+  .nav-full-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    min-height: 48px;
+  }
+  .nav-left-anchor {
+    display: none;
+  }
+  .nav-hub {
+    padding: 0;
+  }
+  .nav-hub-inner {
+    border: 1px solid var(--timeless-border);
+    padding: 2px;
+    gap: 2px;
+  }
+  .nav-tab-box {
+    max-width: none !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    padding: 6px 10px !important;
+    margin: 0 !important;
+    border: 1px solid transparent !important;
+    font-size: 11px !important;
+    gap: 4px;
+    border-radius: 0 !important;
+  }
+  .nav-tab-box.active {
+    background: var(--timeless-inverse-bg) !important;
+    color: var(--timeless-inverse-fg) !important;
+    border-color: var(--timeless-inverse-bg) !important;
+  }
+  .nav-tab-box.active::after {
+    display: none !important;
+  }
+  .nav-tab-box .tab-index {
+    display: none;
+  }
+  .header-actions {
+    min-width: unset;
+    flex-shrink: 0;
+  }
+  .header-actions .theme-label {
+    display: none !important;
+  }
+  .header-actions .timeless-btn {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 14px;
+    border-radius: 0 !important;
+  }
+
+  /* About Hero on Mobile */
+  .about-hero-container {
+    padding: 24px 0 36px;
+  }
+  .about-hero-content {
+    padding: 24px 8px 16px;
+  }
+  .about-hero-title {
+    font-size: clamp(28px, 8.5vw, 42px);
+    margin-bottom: 24px;
+  }
+  .about-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .about-detail-card {
+    padding: 18px;
+  }
+
+  /* Contact View on Mobile */
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .contact-main-title {
+    font-size: 32px;
+  }
+  .contact-channel-card,
+  .contact-form-card {
+    padding: 18px;
+  }
+
   /* Header & Brand */
   .portfolio-header {
     padding: 20px 0 16px;
@@ -557,7 +1213,8 @@
     font-size: 26px;
     letter-spacing: -0.03em;
   }
-  .brand-subtitle {
+  .brand-subtitle,
+  .gallery-subtext {
     font-size: 13px;
     line-height: 1.45;
   }
@@ -568,8 +1225,8 @@
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    border-bottom: 1px solid var(--timeless-border);
-    margin-bottom: 20px;
+    border: none !important;
+    margin-bottom: 0 !important;
   }
   .stats-bar::-webkit-scrollbar {
     display: none;

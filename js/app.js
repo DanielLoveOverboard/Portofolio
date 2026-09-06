@@ -104,6 +104,12 @@ export function selectCategory(cat) {
     b.setAttribute('aria-selected', isSelected ? 'true' : 'false');
   });
 
+  // Perbarui indikator teks filter aktif
+  const filterLabel = document.getElementById('filter-active-label');
+  if (filterLabel) {
+    filterLabel.textContent = currentCategory === 'ALL' ? 'FILTER // ALL WORKS' : `FILTER // ${currentCategory.toUpperCase()}`;
+  }
+
   renderGallery();
 }
 
@@ -139,6 +145,12 @@ function renderGallery() {
 
     return titleMatch || mediumMatch || descMatch || tagsMatch || yearMatch;
   });
+
+  // Perbarui jumlah hasil pada indikator filter
+  const filterCount = document.getElementById('filter-active-count');
+  if (filterCount) {
+    filterCount.textContent = `(${filteredArtworks.length})`;
+  }
 
   if (filteredArtworks.length === 0) {
     galleryGrid.innerHTML = `
@@ -302,11 +314,101 @@ window.resetFilters = function() {
   selectCategory('ALL');
 };
 
+// ==============================================================================
+// TAB ROUTER (ABOUT / GALLERY / CONTACT)
+// ==============================================================================
+export function switchTab(tabName, updateHash = true) {
+  const validTabs = ['about', 'gallery', 'contact'];
+  const target = validTabs.includes(tabName) ? tabName : 'gallery';
+
+  // Sinkronkan tombol tab navigasi atas
+  document.querySelectorAll('.nav-tab-box, .top-tab-btn').forEach(btn => {
+    const isActive = btn.dataset.tab === target;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+
+  // Tampilkan/sembunyikan view panes
+  const viewAbout = document.getElementById('view-about');
+  const viewGallery = document.getElementById('view-gallery');
+  const viewContact = document.getElementById('view-contact');
+
+  if (viewAbout) viewAbout.style.display = target === 'about' ? 'block' : 'none';
+  if (viewGallery) viewGallery.style.display = target === 'gallery' ? 'block' : 'none';
+  if (viewContact) viewContact.style.display = target === 'contact' ? 'block' : 'none';
+
+  // Perbarui hash di address bar (mulus tanpa jump yang canggung)
+  if (updateHash) {
+    if (window.location.hash !== `#${target}`) {
+      window.history.pushState(null, '', `#${target}`);
+    }
+  }
+
+  // Scroll ke atas halaman saat berpindah tab
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+window.switchTab = switchTab;
+
 // Event Listeners
 function setupEventListeners() {
   // Toggle Theme
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', toggleTheme);
+  }
+
+  // 3-Tab Main Navigation Bar (About / Gallery / Contact)
+  const navHub = document.getElementById('nav-hub');
+  if (navHub) {
+    navHub.addEventListener('click', (e) => {
+      const btn = e.target.closest('.nav-tab-box');
+      if (!btn) return;
+      const tab = btn.dataset.tab;
+      if (tab) {
+        switchTab(tab);
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+          document.activeElement.blur();
+        }
+      }
+    });
+  }
+
+  // About View: Expand / Collapse "LEBIH LENGKAP"
+  const aboutExpandBtn = document.getElementById('about-expand-btn');
+  const aboutDetailPane = document.getElementById('about-detail-pane');
+  const aboutBtnText = document.getElementById('about-btn-text');
+  const aboutBtnArrow = document.getElementById('about-btn-arrow');
+  if (aboutExpandBtn && aboutDetailPane) {
+    aboutExpandBtn.addEventListener('click', () => {
+      const isExpanded = aboutDetailPane.classList.toggle('open');
+      aboutExpandBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+      aboutDetailPane.setAttribute('aria-hidden', isExpanded ? 'false' : 'true');
+      if (aboutBtnText) aboutBtnText.textContent = isExpanded ? 'TUTUP INFO' : 'LEBIH LENGKAP';
+      if (aboutBtnArrow) aboutBtnArrow.textContent = isExpanded ? '↑' : '↓';
+    });
+  }
+
+  // About View -> Hubungi Saya trigger button
+  const aboutContactTrigger = document.getElementById('about-contact-trigger-btn');
+  if (aboutContactTrigger) {
+    aboutContactTrigger.addEventListener('click', () => switchTab('contact'));
+  }
+
+  // Contact View: Salin Alamat Email
+  const copyEmailBtn = document.getElementById('copy-email-btn');
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener('click', async () => {
+      const email = 'fachri@example.com';
+      try {
+        await navigator.clipboard.writeText(email);
+        const originalText = copyEmailBtn.textContent;
+        copyEmailBtn.textContent = '✓ ALAMAT EMAIL TERSALIN!';
+        setTimeout(() => {
+          copyEmailBtn.textContent = originalText;
+        }, 2500);
+      } catch (err) {
+        window.location.href = `mailto:${email}`;
+      }
+    });
   }
 
   // Filter Kategori via Interactive Stats Bar (Utama di Mobile, sinkron di Desktop)
@@ -332,7 +434,7 @@ function setupEventListeners() {
     });
   }
 
-  // Pencarian
+  // Pencarian Real-Time
   if (searchInput) {
     let debounceTimer;
     searchInput.addEventListener('input', (e) => {
@@ -354,6 +456,14 @@ function setupEventListeners() {
       if (e.target === modalBackdrop) closeModal();
     });
   }
+
+  // Browser Popstate & Hash Routing (Dukung tombol Back / Forward browser)
+  window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.replace(/^#/, '');
+    if (['about', 'gallery', 'contact'].includes(hash)) {
+      switchTab(hash, false);
+    }
+  });
 
   // Keyboard navigation & Secret Admin Shortcut (Alt + A)
   window.addEventListener('keydown', (e) => {
@@ -377,7 +487,15 @@ async function initApp() {
   initTheme();
   setupEventListeners();
 
-  // Skeleton loading
+  // Inisialisasi tab berdasarkan URL hash awal (misal #about atau #contact)
+  const initialHash = window.location.hash.replace(/^#/, '');
+  if (['about', 'gallery', 'contact'].includes(initialHash)) {
+    switchTab(initialHash, false);
+  } else {
+    switchTab('gallery', false);
+  }
+
+  // Skeleton loading untuk galeri
   if (galleryGrid) {
     galleryGrid.innerHTML = `
       <div class="timeless-card" style="padding:24px;"><div class="timeless-skeleton" style="height:200px;margin-bottom:12px;"></div><div class="timeless-skeleton" style="width:60%;margin-bottom:8px;"></div><div class="timeless-skeleton" style="width:40%;"></div></div>
@@ -386,7 +504,7 @@ async function initApp() {
     `;
   }
 
-  // Ambil data
+  // Ambil data karya
   const { data, isLive, error } = await fetchArtworks('ALL');
   allArtworks = data || [];
 

@@ -18,89 +18,278 @@
 <body>
   <div class="timeless-shell">
     
-    <!-- TOP NAVIGATION BAR (VISITOR ENTRANCE: CLEAN & MINIMAL) -->
-    <header class="timeless-nav">
-      <div class="timeless-container brand-row" style="align-items:center;padding:0;">
-        <strong style="letter-spacing:0.08em;font-size:14px;">MUH. FACHRI AKBAR</strong>
+    <!-- TOP NAVIGATION BAR (FULL BLEED, KOTAK & KASAR, HOVER REVEAL) -->
+    <header class="timeless-nav full-bleed-nav">
+      <div class="nav-full-row">
+        
+        <!-- Left spacer (GALLERY removed as requested) -->
+        <div class="nav-left-anchor" aria-hidden="true"></div>
+
+        <!-- CENTERED BRUTALIST TAB HUB (HOVER REVEALS ABOUT & CONTACT ON PC; ALL 3 ALWAYS VISIBLE ON MOBILE) -->
+        <nav class="nav-hub" id="nav-hub" role="tablist" aria-label="Navigasi Utama">
+          <div class="nav-hub-inner">
+            <button class="nav-tab-box" data-tab="about" role="tab" aria-selected="false">
+              <span class="tab-index timeless-mono">01</span>
+              <span class="tab-label">ABOUT</span>
+            </button>
+            <button class="nav-tab-box active" data-tab="gallery" role="tab" aria-selected="true">
+              <span class="tab-index timeless-mono">02</span>
+              <span class="tab-label">GALLERY</span>
+            </button>
+            <button class="nav-tab-box" data-tab="contact" role="tab" aria-selected="false">
+              <span class="tab-index timeless-mono">03</span>
+              <span class="tab-label">CONTACT</span>
+            </button>
+          </div>
+        </nav>
+
+        <!-- Right: Theme Switcher -->
         <div class="header-actions">
-          <button id="theme-toggle-btn" class="timeless-btn" style="min-height:38px;padding:0 14px;" aria-label="Ganti Tema">
-            <span class="timeless-mono">◐ THEME</span>
+          <button id="theme-toggle-btn" class="timeless-btn timeless-mono theme-toggle-btn" aria-label="Ganti Tema">
+            <span class="theme-icon">◐</span>
+            <span class="theme-label">THEME</span>
           </button>
         </div>
+
       </div>
     </header>
 
-    <main class="timeless-container">
+    <main class="portfolio-main">
       
-      <!-- HERO: MINIMALIST ARTIST STATEMENT -->
-      <section class="portfolio-header">
-        <h1 class="brand-title">Muh. Fachri Akbar</h1>
-        <p class="brand-subtitle timeless-muted">
-          Kumpulan karya dan eksplorasi visual dari berbagai hobiku: 3D, fotografi, lukisan, dan sketsa.
-        </p>
-      </section>
+      <!-- ==============================================================
+           VIEW 1: ABOUT (HERO STATEMENT & EXPANDABLE DETAILS)
+           ============================================================== -->
+      <section id="view-about" class="view-pane" style="display:none;" aria-label="Tentang Seniman">
+        <!-- FULL-BLEED HERO VIEWPORT (100vh idle, dots stretch edge-to-edge) -->
+        <div class="about-hero-container">
+          <!-- Wavy Halftone Decorative Backdrop (Stretches 100% full screen width) -->
+          <div class="about-halftone-backdrop" aria-hidden="true"></div>
 
-      <!-- LIVE METRICS & STATS BAR (INTERACTIVE CATEGORY FILTER) -->
-      <section class="stats-bar" id="stats-bar" role="tablist" aria-label="Filter Kategori Berdasarkan Statistik">
-        <button class="stat-item active" data-category="ALL" role="tab" aria-selected="true" title="Tampilkan Semua Karya">
-          <div class="stat-num" id="stat-total">00</div>
-          <div class="stat-label">Total Works</div>
-        </button>
-        <button class="stat-item" data-category="3D" role="tab" aria-selected="false" title="Filter Karya 3D & CGI">
-          <div class="stat-num" id="stat-3d">00</div>
-          <div class="stat-label">3D & CGI</div>
-        </button>
-        <button class="stat-item" data-category="Photography" role="tab" aria-selected="false" title="Filter Karya Photography">
-          <div class="stat-num" id="stat-photo">00</div>
-          <div class="stat-label">Photography</div>
-        </button>
-        <button class="stat-item" data-category="Painting" role="tab" aria-selected="false" title="Filter Karya Painting">
-          <div class="stat-num" id="stat-paint">00</div>
-          <div class="stat-label">Painting</div>
-        </button>
-        <button class="stat-item" data-category="Sketching" role="tab" aria-selected="false" title="Filter Karya Sketching">
-          <div class="stat-num" id="stat-sketch">00</div>
-          <div class="stat-label">Sketching</div>
-        </button>
-      </section>
+          <div class="about-hero-content">
+            <h1 class="about-hero-title">
+              Hai, Saya Fachri.<br>
+              Seorang Visual Artist.
+            </h1>
 
-      <!-- FILTER & SEARCH TOOLBAR -->
-      <section class="filter-toolbar">
-        <!-- Category Navigation Tabs -->
-        <nav class="category-nav" id="category-nav" role="tablist" aria-label="Filter Kategori Karya">
-          <button class="cat-btn active" data-category="ALL" role="tab" aria-selected="true">
-            ALL WORKS <span class="cat-count">(0)</span>
-          </button>
-          <button class="cat-btn" data-category="3D" role="tab" aria-selected="false">
-            3D <span class="cat-count">(0)</span>
-          </button>
-          <button class="cat-btn" data-category="Photography" role="tab" aria-selected="false">
-            PHOTOGRAPHY <span class="cat-count">(0)</span>
-          </button>
-          <button class="cat-btn" data-category="Painting" role="tab" aria-selected="false">
-            PAINTING <span class="cat-count">(0)</span>
-          </button>
-          <button class="cat-btn" data-category="Sketching" role="tab" aria-selected="false">
-            SKETCHING <span class="cat-count">(0)</span>
-          </button>
-        </nav>
+            <div class="about-trigger-wrap">
+              <button id="about-expand-btn" class="about-expand-btn" aria-expanded="false" aria-controls="about-detail-pane">
+                <span id="about-btn-text">LEBIH LENGKAP</span>
+                <span class="about-btn-arrow" id="about-btn-arrow">↓</span>
+              </button>
+            </div>
+          </div>
+        </div>
 
-        <!-- Search Input -->
-        <div class="search-box">
-          <div class="search-icon">⌕</div>
-          <input 
-            type="search" 
-            id="search-input" 
-            class="search-input" 
-            placeholder="Cari karya, tag (#analog), alat, tahun..." 
-            aria-label="Cari karya"
-          />
+        <!-- Expandable Detail Section (Revealed on click or scroll) -->
+        <div id="about-detail-pane" class="about-detail-pane" aria-hidden="true">
+          <div class="timeless-container about-detail-wrapper">
+            <div class="about-detail-grid">
+              
+              <div class="about-detail-card">
+                <span class="timeless-kicker">01 / PENDEKATAN & FILOSOFI</span>
+                <h3 class="about-card-title">Eksplorasi Bentuk & Disiplin Visual</h3>
+                <p class="about-card-text">
+                  Karya-karya dalam arsip ini berakar pada ketertarikan mendalam terhadap interaksi cahaya, tekstur, ruang, dan struktur. Memadukan presisi komputasi digital dengan ketidakteraturan organik untuk menemukan keindahan esensial dalam kesederhanaan.
+                </p>
+              </div>
+
+              <div class="about-detail-card">
+                <span class="timeless-kicker">02 / 4 PILAR KREATIF</span>
+                <h3 class="about-card-title">Medium & Disiplin</h3>
+                <ul class="about-discipline-list">
+                  <li><strong>3D & CGI:</strong> Hard-surface modeling, spatial lighting, & procedural materials.</li>
+                  <li><strong>Photography:</strong> High-contrast monochrome, street observation, & architectural rhythm.</li>
+                  <li><strong>Painting:</strong> Tactile texture study, physical mark-making, acrylic & oil on canvas.</li>
+                  <li><strong>Sketching:</strong> Observational gesture, anatomical structure, & graphite/charcoal studies.</li>
+                </ul>
+              </div>
+
+              <div class="about-detail-card">
+                <span class="timeless-kicker">03 / PERANGKAT & MATERIAL</span>
+                <h3 class="about-card-title">Hardware, Software & Material Fisik</h3>
+                <div class="about-tools-wrap">
+                  <span class="about-tool-tag">Blender 3D</span>
+                  <span class="about-tool-tag">Cycles Render</span>
+                  <span class="about-tool-tag">Substance 3D</span>
+                  <span class="about-tool-tag">Photoshop</span>
+                  <span class="about-tool-tag">Lightroom</span>
+                  <span class="about-tool-tag">35mm & 120 Film</span>
+                  <span class="about-tool-tag">Oil & Acrylic</span>
+                  <span class="about-tool-tag">Graphite & Charcoal</span>
+                  <span class="about-tool-tag">Linen Canvas</span>
+                </div>
+              </div>
+
+              <div class="about-detail-card">
+                <span class="timeless-kicker">04 / STATUS & KOLABORASI</span>
+                <h3 class="about-card-title">Ketersediaan & Kolaborasi</h3>
+                <p class="about-card-text">
+                  Berbasis di Indonesia. Terbuka untuk proyek visual independen, karya komisi, pameran, dan kurasi bersama.
+                </p>
+                <div style="margin-top:20px;">
+                  <button id="about-contact-trigger-btn" class="timeless-btn timeless-btn-primary" style="font-size:12px;padding:8px 16px;border-radius:0;">
+                    HUBUNGI SAYA →
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- ARTWORKS GALLERY GRID -->
-      <section id="gallery-grid" class="gallery-grid" aria-live="polite">
-        <!-- Di-render oleh js/app.js -->
+      <!-- ==============================================================
+           VIEW 2: GALLERY (PORTFOLIO ARCHIVE)
+           ============================================================== -->
+      <section id="view-gallery" class="view-pane" aria-label="Galeri Karya">
+        
+        <!-- FULL-WIDTH STRIP: COLLECTION HEADER (Line stretches 100% across PC screen) -->
+        <div class="full-bleed-strip header-strip">
+          <div class="timeless-container">
+            <div class="gallery-hero-row">
+              <div>
+                <span class="timeless-kicker">COLLECTION</span>
+                <h1 class="gallery-headline">VISUAL ARCHIVE</h1>
+              </div>
+              <p class="gallery-subtext timeless-muted">
+                Kumpulan karya dan eksplorasi visual dari berbagai hobiku: 3D, fotografi, lukisan, dan sketsa.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FULL-WIDTH STRIP: 5-COLUMN STATS BAR (Spans 100% edge-to-edge, zero cutoffs, sketching touches right border) -->
+        <div class="full-bleed-strip stats-strip">
+          <section class="stats-bar" id="stats-bar" role="tablist" aria-label="Filter Kategori Berdasarkan Statistik">
+            <button class="stat-item active" data-category="ALL" role="tab" aria-selected="true" title="Tampilkan Semua Karya">
+              <div class="stat-num" id="stat-total">00</div>
+              <div class="stat-label">Total Works</div>
+            </button>
+            <button class="stat-item" data-category="3D" role="tab" aria-selected="false" title="Filter Karya 3D & CGI">
+              <div class="stat-num" id="stat-3d">00</div>
+              <div class="stat-label">3D & CGI</div>
+            </button>
+            <button class="stat-item" data-category="Photography" role="tab" aria-selected="false" title="Filter Karya Photography">
+              <div class="stat-num" id="stat-photo">00</div>
+              <div class="stat-label">Photography</div>
+            </button>
+            <button class="stat-item" data-category="Painting" role="tab" aria-selected="false" title="Filter Karya Painting">
+              <div class="stat-num" id="stat-paint">00</div>
+              <div class="stat-label">Painting</div>
+            </button>
+            <button class="stat-item" data-category="Sketching" role="tab" aria-selected="false" title="Filter Karya Sketching">
+              <div class="stat-num" id="stat-sketch">00</div>
+              <div class="stat-label">Sketching</div>
+            </button>
+          </section>
+        </div>
+
+        <!-- GALLERY CONTENT AREA -->
+        <div class="timeless-container content-container">
+          <!-- Filter Indicator & Search Box Toolbar (Clean hierarchy, no redundant category tabs) -->
+          <section class="filter-toolbar">
+            <div class="gallery-filter-indicator">
+              <span class="timeless-kicker" id="filter-active-label">FILTER // ALL WORKS</span>
+              <span class="timeless-mono timeless-muted" id="filter-active-count">(0)</span>
+            </div>
+
+            <!-- Search Input (Kotak & Kasar) -->
+            <div class="search-box">
+              <div class="search-icon">⌕</div>
+              <input 
+                type="search" 
+                id="search-input" 
+                class="search-input" 
+                placeholder="Cari karya, tag (#analog), alat, tahun..." 
+                aria-label="Cari karya"
+              />
+            </div>
+          </section>
+
+          <!-- ARTWORKS GALLERY GRID -->
+          <section id="gallery-grid" class="gallery-grid" aria-live="polite">
+            <!-- Di-render oleh js/app.js -->
+          </section>
+        </div>
+
+      </section>
+
+      <!-- ==============================================================
+           VIEW 3: CONTACT (DIRECT INQUIRY & CHANNELS)
+           ============================================================== -->
+      <section id="view-contact" class="view-pane" style="display:none;" aria-label="Kontak dan Kolaborasi">
+        <!-- FULL-WIDTH STRIP: CONTACT HEADER -->
+        <div class="full-bleed-strip contact-header-strip">
+          <div class="timeless-container">
+            <div class="contact-header-block">
+              <span class="timeless-kicker">GET IN TOUCH</span>
+              <h1 class="contact-main-title">HUBUNGI</h1>
+              <p class="contact-subtext timeless-muted">
+                Terbuka untuk kolaborasi proyek visual, pameran, komisi karya, atau sekadar berdiskusi seputar 3D, fotografi, lukisan, dan sketsa.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeless-container content-container">
+          <div class="contact-grid">
+            
+            <!-- Direct channels -->
+            <div class="contact-info-col">
+              <div class="contact-channel-card">
+                <span class="timeless-kicker">DIRECT EMAIL</span>
+                <a href="mailto:fachri@example.com" class="contact-link-large" id="contact-email-link">fachri@example.com</a>
+                <p class="timeless-muted" style="font-size:12px;margin:8px 0 14px;">Respons berkala dalam kurun waktu 24–48 jam.</p>
+                <button class="timeless-btn" id="copy-email-btn" type="button" style="min-height:36px;font-size:12px;border-radius:0;">
+                  📋 SALIN ALAMAT EMAIL
+                </button>
+              </div>
+
+              <div class="contact-channel-card" style="margin-top:16px;">
+                <span class="timeless-kicker">PLATFORM & TAUTAN</span>
+                <div class="contact-social-list">
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="contact-social-item">
+                    <span>INSTAGRAM</span>
+                    <span class="timeless-mono">↗</span>
+                  </a>
+                  <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="contact-social-item">
+                    <span>GITHUB</span>
+                    <span class="timeless-mono">↗</span>
+                  </a>
+                  <a href="https://artstation.com" target="_blank" rel="noopener noreferrer" class="contact-social-item">
+                    <span>ARTSTATION</span>
+                    <span class="timeless-mono">↗</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Inquiry Form -->
+            <div class="contact-form-col">
+              <div class="contact-form-card">
+                <span class="timeless-kicker">KIRIM PESAN LANGSUNG</span>
+                <h3 style="font-size:18px;margin:8px 0 16px;font-weight:700;">Tulis Pesan atau Pertanyaan</h3>
+                
+                <form id="contact-quick-form">
+                  <div class="timeless-field">
+                    <label class="timeless-label" for="inq-subject">Subjek / Perihal</label>
+                    <input type="text" id="inq-subject" class="timeless-input" placeholder="Kolaborasi / Komisi Karya / Diskusi..." style="border-radius:0;" required />
+                  </div>
+
+                  <div class="timeless-field" style="margin-top:14px;">
+                    <label class="timeless-label" for="inq-body">Isi Pesan</label>
+                    <textarea id="inq-body" class="timeless-textarea" rows="5" placeholder="Tuliskan detail pesan Anda di sini..." style="border-radius:0;" required></textarea>
+                  </div>
+
+                  <button type="submit" class="timeless-btn timeless-btn-primary" style="width:100%;margin-top:16px;border-radius:0;">
+                    KIRIM PESAN VIA EMAIL ↗
+                  </button>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </section>
 
     </main>
@@ -174,10 +363,10 @@
     </div>
 
     <!-- EDITORIAL FOOTER (DENGAN RESTRICTED ADMIN ACCESS) -->
-    <footer class="portfolio-footer">
+    <footer class="portfolio-footer full-bleed-footer">
       <div class="timeless-container footer-content">
         <div>
-          <strong>MUH. FACHRI AKBAR</strong>
+          <strong style="letter-spacing:0.06em;">GALLERY ARCHIVE</strong>
           <div class="timeless-muted" style="margin-top:4px;font-size:12px;">
             Personal Creative Archive · Timeless UI v1.0
           </div>
