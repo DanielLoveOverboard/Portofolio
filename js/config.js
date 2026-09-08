@@ -82,10 +82,10 @@ export function extractYouTubeId(input) {
 
 export const AUDIO_PLAYLIST = [
   {
-    title: 'Lofi Artistic Chill',
+    title: 'The Strokes - Someday',
     artist: 'Fachri Favorite',
     // Masukkan link atau ID YouTube di sini:
-    youtubeId: 'jfKfPfyJRdk',
+    youtubeId: 'https://youtu.be/knU9gRUWCno?si=eo6cnmAxhl0Y0gGk',
   },
   {
     title: 'Ambient Beats',
