@@ -90,9 +90,9 @@ export const AUDIO_PLAYLIST = [
     youtubeId: 'https://youtu.be/knU9gRUWCno?si=eo6cnmAxh10Y0gGk',
   },
   {
-    title: 'NIKI - Every Summertime',
-    artist: 'NIKI',
-    youtubeId: 'https://www.youtube.com/watch?v=bO7c0JgXp1M',
+    title: 'GEESE - Au Pays du Cocaine',
+    artist: 'GEESE',
+    youtubeId: 'hhttps://youtu.be/kjxsaFB5svA?si=dhKEqdDgY8RwUEd4',
   },
   {
     title: 'Ambient Beats',
