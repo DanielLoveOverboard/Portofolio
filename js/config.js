@@ -91,6 +91,19 @@ export const AUDIO_PLAYLIST = [
     title: 'Ambient Beats',
     artist: 'Relaxation Session',
     youtubeId: '5qap5aO4i9A',
+  },
+  {
+    title: "The Strokes - Someday",
+    // Anda bisa memasukkan link YouTube lengkap ATAU hanya ID 11 karakternya saja:
+    youtubeId: "https://youtu.be/knU9gRUWCno?si=eo6cnmAxhl0Y0gGk",
+    artist: "LANY"
+  },
+  {
+    title: "NIKI - Every Summertime",
+    youtubeId: "https://www.youtube.com/watch?v=bO7c0JgXp1M",
+    artist: "NIKI"
+  }
+];
   }
 ];
 
