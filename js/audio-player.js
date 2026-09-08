@@ -3,13 +3,41 @@
 // Author: Muh. Fachri Akbar
 // ==============================================================================
 
-import { AUDIO_PLAYLIST, AUDIO_SETTINGS, extractYouTubeId } from './config.js';
+import { AUDIO_PLAYLIST, AUDIO_SETTINGS, extractYouTubeId, extractYoutubeId } from './config.js';
 
 let ytPlayer = null;
 let isPlayerReady = false;
 let currentTrackIndex = 0;
 let isPlaying = false;
 let hasVinylIntroRun = false;
+let pendingPlay = false;
+
+// Fallback helper ekstraksi yang aman dari perbedaan kapitalisasi
+const safeExtractYouTubeId = typeof extractYouTubeId === 'function'
+  ? extractYouTubeId
+  : (typeof extractYoutubeId === 'function' ? extractYoutubeId : (s) => {
+      if (!s) return '';
+      const trimmed = String(s).trim();
+      const match = trimmed.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+      return match ? match[1] : trimmed;
+    });
+
+// Ambil playlist yang aman dari kondisi undefined
+function getPlaylist() {
+  if (typeof AUDIO_PLAYLIST !== 'undefined' && Array.isArray(AUDIO_PLAYLIST) && AUDIO_PLAYLIST.length > 0) {
+    return AUDIO_PLAYLIST;
+  }
+  if (typeof window !== 'undefined' && Array.isArray(window.AUDIO_PLAYLIST) && window.AUDIO_PLAYLIST.length > 0) {
+    return window.AUDIO_PLAYLIST;
+  }
+  return [
+    {
+      title: 'The Strokes - Someday',
+      artist: 'Fachri Favorite',
+      youtubeId: 'knU9gRUWCno'
+    }
+  ];
+}
 
 // Muat YouTube IFrame API secara asinkron
 function loadYouTubeApi() {
@@ -29,12 +57,17 @@ function loadYouTubeApi() {
 
 // Callback otomatis ketika YouTube API siap
 window.onYouTubeIframeAPIReady = function() {
-  const currentTrack = AUDIO_PLAYLIST[currentTrackIndex] || AUDIO_PLAYLIST[0];
-  const videoId = extractYouTubeId(currentTrack?.youtubeId || 'jfKfPfyJRdk');
+  const playlist = getPlaylist();
+  const currentTrack = playlist[currentTrackIndex] || playlist[0];
+  const videoId = safeExtractYouTubeId(currentTrack?.youtubeId || 'knU9gRUWCno');
+
+  const originOption = (window.location.protocol.startsWith('http'))
+    ? { origin: window.location.origin }
+    : {};
 
   ytPlayer = new window.YT.Player('yt-player-mount', {
-    height: '1',
-    width: '1',
+    height: '200',
+    width: '200',
     videoId: videoId,
     playerVars: {
       autoplay: 0,
@@ -45,21 +78,34 @@ window.onYouTubeIframeAPIReady = function() {
       rel: 0,
       showinfo: 0,
       iv_load_policy: 3,
-      origin: window.location.origin
+      playsinline: 1,
+      ...originOption
     },
     events: {
       onReady: onPlayerReady,
-      onStateChange: onPlayerStateChange
+      onStateChange: onPlayerStateChange,
+      onError: onPlayerError
     }
   });
 };
 
 function onPlayerReady(event) {
   isPlayerReady = true;
-  if (ytPlayer && ytPlayer.setVolume) {
-    ytPlayer.setVolume(AUDIO_SETTINGS.defaultVolume || 60);
+  try {
+    if (ytPlayer && ytPlayer.setVolume) {
+      const vol = (typeof AUDIO_SETTINGS !== 'undefined' && AUDIO_SETTINGS?.defaultVolume) || 60;
+      ytPlayer.setVolume(vol);
+    }
+  } catch (e) {
+    console.warn('Volume set error:', e);
   }
+
   updateDockInfo();
+
+  // Jika pengunjung sudah menekan tombol putar sebelum iframe YouTube siap, mainkan sekarang!
+  if (pendingPlay && ytPlayer && ytPlayer.playVideo) {
+    ytPlayer.playVideo();
+  }
 }
 
 function onPlayerStateChange(event) {
@@ -71,7 +117,11 @@ function onPlayerStateChange(event) {
     isPlaying = false;
     updatePlayStateUI(false);
   } else if (event.data === window.YT.PlayerState.ENDED) {
-    if (AUDIO_SETTINGS.autoLoop) {
+    const loop = (typeof AUDIO_SETTINGS !== 'undefined' && AUDIO_SETTINGS?.autoLoop !== undefined)
+      ? AUDIO_SETTINGS.autoLoop
+      : true;
+
+    if (loop) {
       nextTrack();
     } else {
       isPlaying = false;
@@ -80,13 +130,25 @@ function onPlayerStateChange(event) {
   }
 }
 
+function onPlayerError(event) {
+  console.warn('YouTube Player Event/Error code:', event.data);
+  // Kode 101/150: Video dibatasi embedding oleh label, coba otomatis putar trek berikutnya
+  if (event.data === 101 || event.data === 150) {
+    console.info('Trek memiliki pembatasan embed pihak ketiga, mencoba trek berikutnya...');
+    setTimeout(() => {
+      nextTrack();
+    }, 1200);
+  }
+}
+
 // Perbarui teks status pada dock minimalis
 function updateDockInfo() {
-  const track = AUDIO_PLAYLIST[currentTrackIndex] || { title: 'Track', artist: '' };
+  const playlist = getPlaylist();
+  const track = playlist[currentTrackIndex] || playlist[0] || { title: 'The Strokes - Someday', artist: '' };
   const titleEl = document.getElementById('audio-dock-title');
   if (titleEl) {
-    titleEl.textContent = track.title || 'Music Track';
-    titleEl.title = `${track.title} - ${track.artist}`;
+    titleEl.textContent = track.title || 'The Strokes - Someday';
+    titleEl.title = `${track.title} - ${track.artist || ''}`;
   }
 }
 
@@ -119,8 +181,10 @@ export function startVinylExperience() {
   const introStatus = document.getElementById('vinyl-intro-status');
   const dock = document.getElementById('timeless-audio-dock');
 
-  // Mulai putar audio YouTube
-  if (ytPlayer && ytPlayer.playVideo) {
+  pendingPlay = true;
+
+  // Mulai putar audio YouTube jika player sudah siap
+  if (isPlayerReady && ytPlayer && ytPlayer.playVideo) {
     ytPlayer.playVideo();
   }
 
@@ -130,7 +194,8 @@ export function startVinylExperience() {
   }
 
   if (introStatus) {
-    const track = AUDIO_PLAYLIST[currentTrackIndex] || { title: 'Lagu Pengiring' };
+    const playlist = getPlaylist();
+    const track = playlist[currentTrackIndex] || { title: 'Lagu Pengiring' };
     introStatus.textContent = `MEMUTAR // ${track.title.toUpperCase()} ♫`;
   }
 
@@ -138,6 +203,8 @@ export function startVinylExperience() {
   try {
     sessionStorage.setItem('vinyl_intro_played', 'true');
   } catch (e) {}
+
+  const spinDuration = (typeof AUDIO_SETTINGS !== 'undefined' && AUDIO_SETTINGS?.spinDurationMs) || 3600;
 
   // Setelah berputar sejenak, piringan meluncur turun ke bawah layar dan menghilang
   setTimeout(() => {
@@ -148,12 +215,16 @@ export function startVinylExperience() {
     if (dock) {
       dock.classList.add('visible');
     }
-  }, AUDIO_SETTINGS.spinDurationMs || 3600);
+  }, spinDuration);
 }
 
 // Toggle Play/Pause dari dock minimalis
 export function toggleAudio() {
-  if (!ytPlayer || !isPlayerReady) return;
+  if (!ytPlayer) return;
+  if (!isPlayerReady) {
+    pendingPlay = true;
+    return;
+  }
 
   if (isPlaying) {
     ytPlayer.pauseVideo();
@@ -164,14 +235,15 @@ export function toggleAudio() {
 
 // Pindah ke lagu berikutnya
 export function nextTrack() {
-  if (!ytPlayer || !isPlayerReady) return;
+  const playlist = getPlaylist();
+  currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+  const nextItem = playlist[currentTrackIndex];
+  const videoId = safeExtractYouTubeId(nextItem.youtubeId);
 
-  currentTrackIndex = (currentTrackIndex + 1) % AUDIO_PLAYLIST.length;
-  const nextItem = AUDIO_PLAYLIST[currentTrackIndex];
-  const videoId = extractYouTubeId(nextItem.youtubeId);
-
-  if (ytPlayer.loadVideoById) {
+  if (ytPlayer && ytPlayer.loadVideoById) {
     ytPlayer.loadVideoById(videoId);
+    isPlaying = true;
+    updatePlayStateUI(true);
   }
   updateDockInfo();
 }

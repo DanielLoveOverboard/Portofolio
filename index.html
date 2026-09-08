@@ -384,8 +384,9 @@
 
   </div>
 
-  <!-- YOUTUBE AUDIO BACKGROUND ENGINE (OFFSCREEN) -->
-  <div id="yt-player-mount" style="position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;opacity:0.001;pointer-events:none;" aria-hidden="true"></div>
+  <!-- YOUTUBE AUDIO BACKGROUND ENGINE (OFFSCREEN 200x200 SESUAI STANDAR YOUTUBE API) -->
+  <div id="yt-player-mount" style="position:fixed;bottom:-9999px;left:-9999px;width:200px;height:200px;opacity:0.001;pointer-events:none;" aria-hidden="true"></div>
+
 
   <!-- VINYL AUDIO INTRO (HANYA BERMAIN SEKALI SAAT PERTAMA KALI MASUK) -->
   <aside id="vinyl-intro-container" class="vinyl-intro-container" style="display:none;" aria-label="Pemutar Piringan Musik">
@@ -444,7 +445,7 @@
         </svg>
       </div>
       <span class="audio-dock-prefix timeless-mono">AUDIO //</span>
-      <span id="audio-dock-title" class="audio-dock-title timeless-mono">Lofi Artistic Chill</span>
+      <span id="audio-dock-title" class="audio-dock-title timeless-mono">The Strokes - Someday</span>
       <div class="audio-dock-btns">
         <button id="audio-dock-toggle" type="button" class="audio-dock-btn" title="Putar / Jeda Audio">
           ▷ PLAY
@@ -455,6 +456,17 @@
       </div>
     </div>
   </aside>
+
+  <!-- Peringatan Ramah Pengembang jika file dibuka langsung via file:/// -->
+  <script>
+    if (window.location.protocol === 'file:') {
+      console.warn(
+        '%c[TIMELESS PORTFOLIO NOTICE]%c Membuka file langsung via (file:///) membatasi ES Modules dan YouTube Player di browser modern karena standar keamanan CORS. Untuk hasil sempurna, jalankan dengan Live Server (VS Code) atau jalankan "python -m http.server" di terminal.',
+        'background: #000; color: #fff; font-weight: bold; padding: 2px 4px;',
+        'color: #e53e3e; font-weight: bold;'
+      );
+    }
+  </script>
 
   <!-- Main JavaScript Controller -->
   <script type="module" src="./js/app.js"></script>

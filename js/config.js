@@ -6,8 +6,8 @@
 // KREDENSIAL DEFAULT PROYEK
 // Anda dapat mengisinya di sini, atau memasukkannya langsung via formulir di admin.html
 const HARDCODED_CONFIG = {
-  url: 'https://uytedcoadyshicqghkhq.supabase.co',
-  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5dGVkY29hZHlzaGljcWdoa2hxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MjMyNzAsImV4cCI6MjEwNDA5OTI3MH0.K84wOQWr7fM3fUVtnO3gRjQGugMGCDWWwacfS4cRyPc',
+  url: '',
+  anonKey: '',
 };
 
 // Ambil kredensial dari browser localStorage jika pernah dimasukkan via web
@@ -80,30 +80,25 @@ export function extractYouTubeId(input) {
   return match ? match[1] : trimmed;
 }
 
+// Alias agar kompatibel dengan kedua variasi penulisan huruf besar/kecil
+export const extractYoutubeId = extractYouTubeId;
+
 export const AUDIO_PLAYLIST = [
   {
     title: 'The Strokes - Someday',
     artist: 'Fachri Favorite',
     // Masukkan link atau ID YouTube di sini:
-    youtubeId: 'https://youtu.be/knU9gRUWCno?si=eo6cnmAxhl0Y0gGk',
+    youtubeId: 'https://youtu.be/knU9gRUWCno?si=eo6cnmAxh10Y0gGk',
+  },
+  {
+    title: 'NIKI - Every Summertime',
+    artist: 'NIKI',
+    youtubeId: 'https://www.youtube.com/watch?v=bO7c0JgXp1M',
   },
   {
     title: 'Ambient Beats',
     artist: 'Relaxation Session',
     youtubeId: '5qap5aO4i9A',
-  },
-  {
-    title: "The Strokes - Someday",
-    // Anda bisa memasukkan link YouTube lengkap ATAU hanya ID 11 karakternya saja:
-    youtubeId: "https://youtu.be/knU9gRUWCno?si=eo6cnmAxhl0Y0gGk",
-    artist: "LANY"
-  },
-  {
-    title: "NIKI - Every Summertime",
-    youtubeId: "https://www.youtube.com/watch?v=bO7c0JgXp1M",
-    artist: "NIKI"
-  }
-];
   }
 ];
 
@@ -117,5 +112,7 @@ if (typeof window !== 'undefined') {
   window.AUDIO_PLAYLIST = AUDIO_PLAYLIST;
   window.AUDIO_SETTINGS = AUDIO_SETTINGS;
   window.extractYouTubeId = extractYouTubeId;
+  window.extractYoutubeId = extractYouTubeId;
 }
+
 
