@@ -1,0 +1,17 @@
+﻿================================================================================
+PETUNJUK CARA MENARUH FILE MP3 AGAR 100% BEBAS DARI IKLAN YOUTUBE
+================================================================================
+
+1. Simpan file lagu mp3 kesukaan Anda langsung di folder ini:
+   d:\My Data ALL\Downloads\Web Idea Bank\Portofolio\assets\audio\
+
+   Contoh: simpan file dengan nama 	he-strokes-someday.mp3
+
+2. Buka berkas js/config.js, pastikan tertulis:
+   src: 'assets/audio/the-strokes-someday.mp3',
+
+3. Selesai! Web Anda akan memutar lagu tersebut secara instan tanpa ada 
+   iklan apa pun selamanya (100% Zero Ads).
+
+*Catatan: Jika file mp3 belum Anda taruh di folder ini, website secara otomatis
+akan tetap memutar dari link YouTube sebagai cadangan (fallback).

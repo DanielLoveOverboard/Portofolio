@@ -66,6 +66,7 @@ window.onYouTubeIframeAPIReady = function() {
     : {};
 
   ytPlayer = new window.YT.Player('yt-player-mount', {
+    host: 'https://www.youtube-nocookie.com',
     height: '200',
     width: '200',
     videoId: videoId,

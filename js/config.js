@@ -3,8 +3,7 @@
 // Author: Muh. Fachri Akbar
 // ==============================================================================
 
-// KREDENSIAL DEFAULT PROYEK
-// Anda dapat mengisinya di sini, atau memasukkannya langsung via formulir di admin.html
+// KREDENSIAL DEFAULT PROYEK (SUDAH TERSIMPAN PERMANEN)
 const HARDCODED_CONFIG = {
   url: 'https://uytedcoadyshicqghkhq.supabase.co',
   anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5dGVkY29hZHlzaGljcWdoa2hxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MjMyNzAsImV4cCI6MjEwNDA5OTI3MH0.K84wOQWr7fM3fUVtnO3gRjQGugMGCDWWwacfS4cRyPc',
@@ -86,14 +85,14 @@ export const extractYoutubeId = extractYouTubeId;
 export const AUDIO_PLAYLIST = [
   {
     title: 'The Strokes - Someday',
-    artist: 'GEESE',
+    artist: 'Fachri Favorite',
     // Masukkan link atau ID YouTube di sini:
     youtubeId: 'https://youtu.be/knU9gRUWCno?si=eo6cnmAxh10Y0gGk',
   },
   {
-    title: 'GEESE - Au Pays du Cocaine',
-    artist: 'GEESE',
-    youtubeId: 'https://youtu.be/kjxsaFB5svA?si=RpkWIfrhRy3BtF2h',
+    title: 'NIKI - Every Summertime',
+    artist: 'NIKI',
+    youtubeId: 'https://www.youtube.com/watch?v=bO7c0JgXp1M',
   },
   {
     title: 'Ambient Beats',
