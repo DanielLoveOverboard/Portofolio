@@ -238,7 +238,7 @@
             <div class="contact-info-col">
               <div class="contact-channel-card">
                 <span class="timeless-kicker">DIRECT EMAIL</span>
-                <a href="mailto:fachri@example.com" class="contact-link-large" id="contact-email-link">fachri@example.com</a>
+                <a href="mailto:fachriakbar365@gmail.com" class="contact-link-large" id="contact-email-link">fachriakbar365@gmail.com</a>
                 <p class="timeless-muted" style="font-size:12px;margin:8px 0 14px;">Respons berkala dalam kurun waktu 24–48 jam.</p>
                 <button class="timeless-btn" id="copy-email-btn" type="button" style="min-height:36px;font-size:12px;border-radius:0;">
                   📋 SALIN ALAMAT EMAIL
@@ -248,8 +248,8 @@
               <div class="contact-channel-card" style="margin-top:16px;">
                 <span class="timeless-kicker">PLATFORM & TAUTAN</span>
                 <div class="contact-social-list">
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="contact-social-item">
-                    <span>INSTAGRAM</span>
+                  <a href="https://instagram.com/iyodihhh" target="_blank" rel="noopener noreferrer" class="contact-social-item">
+                    <span>INSTAGRAM (@iyodihhh)</span>
                     <span class="timeless-mono">↗</span>
                   </a>
                   <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="contact-social-item">
@@ -373,8 +373,8 @@
         </div>
 
         <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:12px;">
-          <a href="mailto:fachri@example.com">EMAIL</a>
-          <a href="https://instagram.com" target="_blank" rel="noopener">INSTAGRAM</a>
+          <a href="mailto:fachriakbar365@gmail.com">EMAIL</a>
+          <a href="https://instagram.com/iyodihhh" target="_blank" rel="noopener">INSTAGRAM</a>
           <a href="https://github.com" target="_blank" rel="noopener">GITHUB</a>
           <!-- Discreet Admin Entrance -->
           <a href="./admin.html" class="timeless-mono" title="Owner Access (Shortcut: Alt + A)" style="opacity:0.35;text-decoration:none;">[ · ]</a>
@@ -383,6 +383,78 @@
     </footer>
 
   </div>
+
+  <!-- YOUTUBE AUDIO BACKGROUND ENGINE (OFFSCREEN) -->
+  <div id="yt-player-mount" style="position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;opacity:0.001;pointer-events:none;" aria-hidden="true"></div>
+
+  <!-- VINYL AUDIO INTRO (HANYA BERMAIN SEKALI SAAT PERTAMA KALI MASUK) -->
+  <aside id="vinyl-intro-container" class="vinyl-intro-container" style="display:none;" aria-label="Pemutar Piringan Musik">
+    <div class="vinyl-stage-wrap">
+      
+      <!-- Piringan Hitam Berputar (SVG Monokrom Timeless UI) -->
+      <div class="vinyl-disc-wrap">
+        <button id="vinyl-disc" class="vinyl-disc" type="button" title="Klik untuk memutar piringan musik" aria-label="Putar piringan musik">
+          <svg viewBox="0 0 200 200" class="vinyl-svg" aria-hidden="true">
+            <!-- Piringan Hitam & Grooves -->
+            <circle cx="100" cy="100" r="98" class="vinyl-body" />
+            <circle cx="100" cy="100" r="88" class="vinyl-line" />
+            <circle cx="100" cy="100" r="80" class="vinyl-line" />
+            <circle cx="100" cy="100" r="72" class="vinyl-line" />
+            <circle cx="100" cy="100" r="64" class="vinyl-line" />
+            <circle cx="100" cy="100" r="56" class="vinyl-line" />
+            <!-- Center Label -->
+            <circle cx="100" cy="100" r="38" class="vinyl-label-bg" />
+            <circle cx="100" cy="100" r="34" class="vinyl-label-ring" />
+            <text x="100" y="94" text-anchor="middle" class="vinyl-svg-title">FACHRI</text>
+            <text x="100" y="104" text-anchor="middle" class="vinyl-svg-sub">ARCHIVE</text>
+            <text x="100" y="114" text-anchor="middle" class="vinyl-svg-rpm">33⅓ RPM</text>
+            <!-- Spindle Hole -->
+            <circle cx="100" cy="100" r="5" class="vinyl-hole" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Kartu Kontrol Intro -->
+      <div class="vinyl-intro-card">
+        <div class="vinyl-intro-text">
+          <span class="timeless-kicker" id="vinyl-intro-status">AUDIO PENGIRING // FACHRI ARCHIVE</span>
+          <div class="vinyl-intro-sub timeless-mono">Eksplorasi visual dengan iringan musik</div>
+        </div>
+        <div class="vinyl-intro-actions">
+          <button id="vinyl-start-btn" type="button" class="timeless-btn timeless-btn-primary">
+            ▷ PUTAR PIRINGAN
+          </button>
+          <button id="vinyl-dismiss-btn" type="button" class="timeless-btn" title="Tutup audio">
+            TUTUP [✕]
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- MINIMALIST AUDIO CORNER DOCK (TAMPIL SETELAH PIRINGAN MENGHILANG KE BAWAH) -->
+  <aside id="timeless-audio-dock" class="timeless-audio-dock" aria-label="Kontrol Audio Musik">
+    <div class="audio-dock-inner">
+      <div class="audio-dock-disc-icon" id="audio-dock-disc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="14" height="14">
+          <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.5" />
+          <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="0.75" />
+          <circle cx="12" cy="12" r="3" fill="currentColor" />
+        </svg>
+      </div>
+      <span class="audio-dock-prefix timeless-mono">AUDIO //</span>
+      <span id="audio-dock-title" class="audio-dock-title timeless-mono">Lofi Artistic Chill</span>
+      <div class="audio-dock-btns">
+        <button id="audio-dock-toggle" type="button" class="audio-dock-btn" title="Putar / Jeda Audio">
+          ▷ PLAY
+        </button>
+        <button id="audio-dock-next" type="button" class="audio-dock-btn" title="Ganti Lagu Berikutnya">
+          GANTI ⟳
+        </button>
+      </div>
+    </div>
+  </aside>
 
   <!-- Main JavaScript Controller -->
   <script type="module" src="./js/app.js"></script>

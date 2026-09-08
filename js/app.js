@@ -11,6 +11,7 @@ if (typeof window !== 'undefined' && window.location.pathname.endsWith('/index.h
 
 import { fetchArtworks } from './supabaseClient.js';
 import { isSupabaseConfigured } from './config.js';
+import { initAudioPlayer } from './audio-player.js';
 
 // State aplikasi
 let currentCategory = 'ALL';
@@ -397,7 +398,7 @@ function setupEventListeners() {
   const copyEmailBtn = document.getElementById('copy-email-btn');
   if (copyEmailBtn) {
     copyEmailBtn.addEventListener('click', async () => {
-      const email = 'fachri@example.com';
+      const email = 'fachriakbar365@gmail.com';
       try {
         await navigator.clipboard.writeText(email);
         const originalText = copyEmailBtn.textContent;
@@ -408,6 +409,18 @@ function setupEventListeners() {
       } catch (err) {
         window.location.href = `mailto:${email}`;
       }
+    });
+  }
+
+  // Contact View: Kirim Pesan Langsung via Email Client
+  const contactForm = document.getElementById('contact-quick-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const subject = document.getElementById('inq-subject')?.value || '';
+      const body = document.getElementById('inq-body')?.value || '';
+      const mailtoUrl = `mailto:fachriakbar365@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoUrl;
     });
   }
 
@@ -486,6 +499,7 @@ function setupEventListeners() {
 async function initApp() {
   initTheme();
   setupEventListeners();
+  initAudioPlayer();
 
   // Inisialisasi tab berdasarkan URL hash awal (misal #about atau #contact)
   const initialHash = window.location.hash.replace(/^#/, '');
