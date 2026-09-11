@@ -85,7 +85,7 @@ export const extractYoutubeId = extractYouTubeId;
 export const AUDIO_PLAYLIST = [
   {
     title: 'The Strokes - Someday',
-    artist: 'Fachri Favorite',
+    artist: 'The Strokes',
     // Masukkan link atau ID YouTube di sini:
     youtubeId: 'https://youtu.be/knU9gRUWCno?si=eo6cnmAxh10Y0gGk',
   },
@@ -95,10 +95,21 @@ export const AUDIO_PLAYLIST = [
     youtubeId: 'hhttps://youtu.be/kjxsaFB5svA?si=dhKEqdDgY8RwUEd4',
   },
   {
-    title: 'Ambient Beats',
-    artist: 'Relaxation Session',
-    youtubeId: '5qap5aO4i9A',
-  }
+    title: 'Malcom Todd - Earrings',
+    artist: 'Malcom Todd',
+    youtubeId: 'https://youtu.be/a4tdS3IB294?si=KW9hdt3xtrIK_Cfn',
+  },
+  {
+    title: 'Spiritualized - Ladies and gentleman we are floating in space',
+    artist: 'Spiritualized',
+    youtubeid: 'https://youtu.be/-UGbOqadHb0?si=fpuNe8UEAYTfv1eD',
+  },
+  {
+    title: 'the Mounntain Goats - Love Love Love',
+    artist: 'the Mountain Goats',
+    youtubeid: 'https://youtu.be/aoO0AHwM010?si=RxfE-KL9XgVvW55p',
+  },
+  {
 ];
 
 export const AUDIO_SETTINGS = {
