@@ -108,8 +108,7 @@ export const AUDIO_PLAYLIST = [
     title: 'the Mounntain Goats - Love Love Love',
     artist: 'the Mountain Goats',
     youtubeid: 'https://youtu.be/aoO0AHwM010?si=RxfE-KL9XgVvW55p',
-  },
-  {
+  }
 ];
 
 export const AUDIO_SETTINGS = {
